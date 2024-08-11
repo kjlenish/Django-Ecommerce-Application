@@ -1,0 +1,126 @@
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shop Sphere</title>
+
+    <link href="{% static 'lib/bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Volkhov:400i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+    <link href="{% static 'lib/animate.css/animate.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/components-font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/et-line-font/et-line-font.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/flexslider/flexslider.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/simple-text-rotator/simpletextrotator.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owl.carousel/dist/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owl.carousel/dist/assets/owl.theme.default.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+  </head>
+
+  <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <main>
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
+
+      {% include 'nav.html' %}
+
+      
+      {% block header-image %}
+
+      {% endblock header-image %}
+
+
+      {% if messages %}
+        {% for message in messages %}
+
+          <div class="alert alert-{{ message.tags }} text-center" role="alert">
+            <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>Alert!</strong> {{ message }}
+          </div>
+      
+        {% endfor %}
+      {% endif %}
+
+
+      <div class="main">
+
+
+
+        {% block content %}
+
+
+          {% block banner %}
+          
+          {% endblock banner %}
+
+
+        {% endblock content %}
+
+
+
+      </div>
+
+
+      {% if is_paginated %}
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="pagination font-alt"></div>
+
+              {% if page_obj.has_previous %}
+                <a href="?page=1" aria-label="Previous">
+                  <i class="fa fa-angle-left"></i>
+                </a>
+
+                <a href="?page={{ page_obj.previous_page_number }}">
+                  prev
+                </a>
+              {% endif %}
+
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                  <a class="active" href="?page={{ num }}">{{ num }}</a>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                  <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    next
+                  </a>
+                  <a href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    <i class="fa fa-angle-right"></i>
+                  </a>
+              {% endif %}
+            
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+
+      {% include 'footer.html' %}
+
+      <div class="scroll-up">
+        <a href="#totop"><i class="fa fa-angle-double-up"></i></a>
+      </div>
+    </main>
+  
+    <script src="{% static 'lib/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'lib/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/wow/dist/wow.js' %}"></script>
+    <script src="{% static 'lib/flexslider/jquery.flexslider.js' %}"></script>
+    <script src="{% static 'lib/smoothscroll.js' %}"></script>
+    <script src="{% static 'lib/simple-text-rotator/jquery.simple-text-rotator.min.js' %}"></script>
+    <script src="{% static 'lib/owl.carousel/dist/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    
+  </body>
+</html>

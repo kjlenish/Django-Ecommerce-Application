@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+{% block header-image %}
+    {% include "products/home_header.html" %}
+{% endblock header-image %}
+
+
+{% block content %}
+    {% include "products/new_arrivals.html" %}
+
+    {% block banner %}
+        {% include "products/quote_banner.html" %}
+    {% endblock banner %}
+    
+    {% include "products/featured_products.html" %}
+{% endblock content %}
+
