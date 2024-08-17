@@ -75,6 +75,8 @@ def user_register(request):
 @login_required
 def user_details(request):
     try:
+        user = User.objects.get(username=request.user)
+        
         try:
             profile = request.user.customer_profile
             profile_form = CustomerProfileForm(request.POST or None, instance=profile)
@@ -118,6 +120,9 @@ def user_details(request):
                 profile.primary_address = address
                 profile.save()
                 
+                user.email = contact_form.cleaned_data['email']
+                user.save()
+                
                 messages.success(request, f"Your details has been added")
                 return redirect('home')
             else:
@@ -155,8 +160,9 @@ def user_profile(request, username):
         return render(request, 'lost.html')
 
 
+@login_required
 def update_user_profile(request, username):
-    # try:    
+    try:    
         try:
            user = User.objects.get(username=username)
            user_form = UserUpdateForm(request.POST or None, instance=user)
@@ -176,17 +182,26 @@ def update_user_profile(request, username):
         
         if request.POST:
             if user_form.is_valid() and profile_form.is_valid():
-                user_form.save()
+                user = user_form.save(commit=False)
+                user.email = profile_form.cleaned_data['email']
+                
                 profile_form.save()
+                user.save()
+                
                 messages.success(request, "Your profile has been updated")
                 return redirect('profile', username = username)
             else:
                 messages.warning(request, "Invalid details... Please try again !!")
         
         return render(request, 'accounts/update_profile.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+    
 
+@login_required
 def update_user_address(request, username):
-    # try:
+    try:
         try:
             user = User.objects.get(username=username)
             address = Address.objects.get(user=user, default=True)
@@ -207,16 +222,17 @@ def update_user_address(request, username):
                 messages.warning(request, "Invalid details... Please try again !!")
             
         return render(request, 'accounts/update_address.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
 
 
+@login_required
 def update_user_password(request, username):
-    # try:    
-
+    try:    
         user = User.objects.get(username=username)
-        # user = request.user
         if request.method == "POST":
             user_form = UpdatePasswordForm(user, request.POST)
-            print(user_form)
 
             if user_form.is_valid():
                 user_form.save()
@@ -229,3 +245,7 @@ def update_user_password(request, username):
             user_form = UpdatePasswordForm(user)
             context = {"user_form": user_form}
         return render(request, 'accounts/update_password.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+    
