@@ -151,7 +151,7 @@ a,
 
 /* Sections */
 .navbar-custom + .main {
-  margin-top: 50px;
+  /* margin-top: 50px; */
 }
 
 .main {
@@ -813,7 +813,7 @@ a,
 /* Forms common style */
 .form-control {
   font-family: "Roboto Condensed", sans-serif;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: 2px;
   font-size: 11px;
   height: 33px;
@@ -2947,4 +2947,13 @@ Google map
   align-items: center;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+}
+.padding_5 {
+  padding-bottom: 5rem;
+}
+
+
+.profile_font {
+  font-family: "Roboto Condensed", sans-serif;
+  letter-spacing: 2px;
 }

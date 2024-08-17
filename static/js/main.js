@@ -55,7 +55,6 @@ console.log('%c Proudly Crafted with ZiOn.', 'background: #222; color: #bada55')
         }
 
         buildHomeSection(homeSection);
-        navbarAnimation(navbar, homeSection, navHeight);
         navbarSubmenu(width);
         hoverDropdown(width, mobileTest);
 
@@ -67,7 +66,6 @@ console.log('%c Proudly Crafted with ZiOn.', 'background: #222; color: #bada55')
 
         $(window).scroll(function() {
             effectsHomeSection(homeSection, this);
-            navbarAnimation(navbar, homeSection, navHeight);
         });
 
         /* ---------------------------------------------- /*
@@ -148,22 +146,6 @@ console.log('%c Proudly Crafted with ZiOn.', 'background: #222; color: #bada55')
             separator: "|",
             speed: 3000
         });
-
-
-        /* ---------------------------------------------- /*
-         * Transparent navbar animation
-         /* ---------------------------------------------- */
-
-        function navbarAnimation(navbar, homeSection, navHeight) {
-            var topScroll = $(window).scrollTop();
-            if (navbar.length > 0 && homeSection.length > 0) {
-                if (topScroll >= navHeight) {
-                    navbar.removeClass('navbar-transparent').css('background-color', 'rgba(10, 10, 10, 0.9)').fadeIn();
-                } else {
-                    navbar.addClass('navbar-transparent').css('background-color', 'transparent').fadeIn();
-                }
-            }
-        }
 
         /* ---------------------------------------------- /*
          * Navbar submenu
