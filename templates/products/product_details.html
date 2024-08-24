@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+
+  <section class="module">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6 mb-sm-40">
+          <img id="main-image" class="gallery" src="{{ product.images.first.image.url }}" alt="Product Image"/>
+          <ul class="product-gallery">
+            {% for image in product.images.all %}
+              <li><a class="gallery thumbnail" data-image-url="{{ image.image.url }}">
+                <img src="{{ image.image.url }}" alt="Product Image"/>
+              </a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-12">
+              <h1 class="product-title font-alt">{{ product.name }}</h1>
+            </div>
+          </div>
+          <div class="row mb-20">
+            <div class="col-sm-12">
+              <div class="price font-alt"><span class="amount">
+                {% if product.is_sale %}
+                <strike>₹ {{ product.price|floatformat:2|intcomma }}</strike>
+                &nbsp; ₹ {{ product.sale_price|floatformat:2|intcomma }}
+              {% else %}
+                ₹ {{ product.price|floatformat:2|intcomma }}
+              {% endif %}
+              </span></div>
+            </div>
+          </div>
+          <div class="row mb-20">
+            <div class="col-sm-12">
+              <div class="description">
+                <p>{{ product.short_description }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="row mb-20">
+            <div class="col-sm-10"><a class="btn btn-lg btn-block btn-round btn-b" href="#">Add To Cart</a></div>
+          </div>
+          <div class="row mb-20">
+            <div class="col-sm-12">
+              <div class="product_meta">Categories:
+                {% for category in all_categories %}
+                  <a href="{% url 'categories' category.slug %}"> {{ category.name }}, </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row mt-70">
+        <div class="col-sm-12">
+          <ul class="nav nav-tabs font-alt" role="tablist">
+            <li class="active"><a href="#description" data-toggle="tab"><span class="icon-tools-2"></span>Description</a></li>
+            <li><a href="#specifications" data-toggle="tab"><span class="icon-tools-2"></span>Specifications</a></li>
+            <li><a href="#reviews" data-toggle="tab"><span class="icon-tools-2"></span>Reviews (2)</a></li>
+          </ul>
+          
+          <div class="tab-content">
+            
+            <div class="tab-pane active" id="description">
+              <p>{{ product.description }}</p>
+            </div>
+            
+            <div class="tab-pane" id="specifications">
+              <table>
+                {% for specification_category, specs in product.specification.items %}
+                  <thead>
+                      <tr>
+                          <th colspan="2">{{ specification_category }}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for header, content in specs.items %}
+                      <tr>
+                          <td>{{ header }}</td>
+                          <td>{{ content}}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                {% endfor %}
+              </table>
+            </div>
+            
+            <div class="tab-pane" id="reviews">
+              <div class="comments reviews">
+                <div class="comment clearfix">
+                  <div class="comment-avatar"><img src="" alt="avatar"/></div>
+                  <div class="comment-content clearfix">
+                    <div class="comment-author font-alt"><a href="#">John Doe</a></div>
+                    <div class="comment-body">
+                      <p>The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The European languages are members of the same family. Their separate existence is a myth.</p>
+                    </div>
+                    <div class="comment-meta font-alt">Today, 14:55 -<span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star-off"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="comment clearfix">
+                  <div class="comment-avatar"><img src="" alt="avatar"/></div>
+                  <div class="comment-content clearfix">
+                    <div class="comment-author font-alt"><a href="#">Mark Stone</a></div>
+                    <div class="comment-body">
+                      <p>Europe uses the same vocabulary. The European languages are members of the same family. Their separate existence is a myth.</p>
+                    </div>
+                    <div class="comment-meta font-alt">Today, 14:59 -<span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star-off"></i></span><span><i class="fa fa-star star-off"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="comment-form mt-30">
+                <h4 class="comment-form-title font-alt">Add review</h4>
+                <form method="post">
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="sr-only" for="name">Name</label>
+                        <input class="form-control" id="name" type="text" name="name" placeholder="Name"/>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="sr-only" for="email">Name</label>
+                        <input class="form-control" id="email" type="text" name="email" placeholder="E-mail"/>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <select class="form-control">
+                          <option selected="true" disabled="">Rating</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <textarea class="form-control" id="" name="" rows="4" placeholder="Review"></textarea>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <button class="btn btn-round btn-d" type="submit">Submit Review</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider-w">
+
+  {% include "products/related_products.html" %}
+
+{% endblock content %}
+

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            {% if categories.first.parent_category %}
+              <h1 class="module-title font-alt mb-0">{{ categories.first.parent_category.name }}</h1>
+            {% else %}
+              <h1 class="module-title font-alt mb-0">Categories</h1>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+<section class="module-small">
+  <div class="container">
+    <div class="row multi-columns-row">
+
+      {% for category in categories %}
+        <div class="col-sm-6 col-md-3 col-lg-3">
+          <div class="shop-item">
+            <div><a href="{% url 'categories' parent=category.slug %}">
+              <img src="{{ category.image.url }}" alt="Category"/>
+            </a></div>
+            <h4 class="shop-item-title font-alt"><a href="{% url 'categories' parent=category.slug %}">{{ category.name }}</a></h4>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+{% endblock content %}

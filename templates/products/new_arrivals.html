@@ -1,3 +1,5 @@
+{% load humanize %}
+
 <section class="module-small">
     <div class="container">
         <div class="row">
@@ -7,20 +9,30 @@
         </div>
         <div class="row multi-columns-row">
 
-            {% for product in new_arrivals %}
-                <div class="col-sm-6 col-md-3 col-lg-3">
-                    <div class="shop-item">
-                        <div class="shop-item-image"><img src="assets/images/shop/product-7.jpg" alt="Accessories Pack"/></div>
-                        <h4 class="shop-item-title font-alt"><a href="#">Accessories Pack</a></h4>£9.00
-                    </div>
+            {% for new_product in new_arrivals %}
+            <div class="col-sm-6 col-md-3 col-lg-3">
+                <div class="shop-item">
+                    <a href="{% url 'product' new_product.id %}">
+                        <div class="shop-item-image">
+                            <img src="{{ new_product.images.first.image.url }}" alt="{{ new_product.name }}"/>
+                        </div>
+                    </a>
+                  <h4 class="shop-item-title font-alt"><a href="{% url 'product' new_product.id %}">{{ new_product.name }}</a></h4>
+                  {% if new_product.is_sale %}
+                      <strike>₹ {{ new_product.price|floatformat:2|intcomma }}</strike>
+                      &nbsp; ₹ {{ new_product.sale_price|floatformat:2|intcomma }}
+                    {% else %}
+                      ₹ {{ new_product.price|floatformat:2|intcomma }}
+                    {% endif %}
                 </div>
+              </div>
             {% endfor %}
 
         </div>
         
         <div class="row mt-30">
             <div class="col-sm-12 align-center">
-                <a class="btn btn-b btn-round" href="#">See all products</a>
+                <a class="btn btn-b btn-round" href="{% url 'filter_products' 'new' %}">See all products</a>
             </div>
         </div>
     </div>

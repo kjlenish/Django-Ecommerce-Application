@@ -363,42 +363,28 @@ console.log('%c Proudly Crafted with ZiOn.', 'background: #222; color: #bada55')
          * Owl Carousel
          /* ---------------------------------------------- */
 
-        $('.owl-carousel').each(function(i) {
-
-            // Check items number
-            if ($(this).data('items') > 0) {
-                items = $(this).data('items');
-            } else {
-                items = 4;
-            }
-
-            // Check pagination true/false
-            if (($(this).data('pagination') > 0) && ($(this).data('pagination') === true)) {
-                pagination = true;
-            } else {
-                pagination = false;
-            }
-
-            // Check navigation true/false
-            if (($(this).data('navigation') > 0) && ($(this).data('navigation') === true)) {
-                navigation = true;
-            } else {
-                navigation = false;
-            }
-
-            // Build carousel
-            $(this).owlCarousel( {
+         $('.owl-carousel').each(function() {
+            const items = $(this).data('items') || 4;
+            const pagination = $(this).data('pagination') === true;
+            const navigation = $(this).data('navigation') === true;
+        
+            // Check if the number of actual items is less than the required items
+            const itemCount = $(this).find('.owl-item').length;
+            const loop = itemCount > items; // Only enable looping if there are enough items
+        
+            $(this).owlCarousel({
                 navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
                 nav: navigation,
                 dots: pagination,
-                loop: true,
+                loop: loop,
                 dotsSpeed: 400,
                 items: items,
                 navSpeed: 300,
-                autoplay: 2000
+                autoplay: true,
+                autoplayTimeout: 2000,
             });
-
         });
+        
 
 
         /* ---------------------------------------------- /*

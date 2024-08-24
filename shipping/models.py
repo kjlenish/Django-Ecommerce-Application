@@ -18,7 +18,7 @@ class Address(models.Model):
     zip_code = models.CharField(max_length=10, blank=True, null=True)
     state = models.TextField(max_length=254, blank=True, null=True)
     country = models.TextField(max_length=254, blank=True, null=True)
-    last_updated = models.DateField(auto_now=True)
+    date_updated = models.DateTimeField(auto_now=True)
     default = models.BooleanField(default=False)
     
 
