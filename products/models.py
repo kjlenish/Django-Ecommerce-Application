@@ -42,7 +42,10 @@ class Product(models.Model):
     name = models.CharField(max_length=254, blank=False, null=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, related_name='category')
     price = models.FloatField(null=False, blank=False)
+    
+    max_quantity = models.IntegerField(null=False, blank=False, default=5)
     stock = models.IntegerField(null=False, blank=False)
+    delivery_charge = models.FloatField(null=False, blank=False, default=40)
     
     is_featured = models.BooleanField(null=False, blank=False, default=False)
     is_sale = models.BooleanField(null=False, blank=False, default=False)

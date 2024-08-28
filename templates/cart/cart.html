@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Your Cart</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                
+                {% if cart %}
+                    <div class="col-sm-8">
+                        <div class="row">
+
+                            {% for item in cart %}
+                                <div class="cart-item">
+                                    <div class="row">
+                                        <div class="cart-item-details">
+                                            <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="cart-item-image"/>
+                                            <div class="cart-item-info">
+                                                <h3>{{ item.product.name }}</h3>                                    
+                                            </div>
+                                        </div>
+
+                                        <div class="cart-item-pricing">
+                                            <div class="col-sm-1"></div>
+                                            <div class="col-sm-4">
+                                                {% if item.product.is_sale %}
+                                                    <strike>₹ {{ item.product.price|floatformat:2|intcomma }}</strike>
+                                                    &nbsp; ₹ {{ item.product.sale_price|floatformat:2|intcomma }}
+                                                {% else %}
+                                                    ₹ {{ item.product.price|floatformat:2|intcomma }}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-sm-7"></div>
+                                            
+                                        </div>
+                                    </div>
+
+
+                                    <form class="form" method="POST" id="quantity-form">
+                                        {% csrf_token %}
+                                        <div class="cart-item-actions">
+                                            <div class="quantity-controls form-group">
+                                                <input type="hidden" name="product_id" value="{{ item.product.id }}"/>
+
+                                                <button type="button" class="quantity-btn minus-btn" data-product-id="{{ item.product.id }}">-</button>
+                                                <input type="text" 
+                                                        name="item_quantity"
+                                                    value="{{ item.quantity }}" 
+                                                    class="quantity-input" 
+                                                    id="quantity-input-{{ item.product.id }}" 
+                                                    data-min="1" 
+                                                    data-max="{{ item.product.max_quantity }}" 
+                                                    readonly />
+                                                <button type="button" class="quantity-btn plus-btn" data-product-id="{{ item.product.id }}">+</button>
+
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-sm-1"></div>
+                                                <div class="form-group col-sm-4">
+                                                    <button type="submit" name="action" value="update" class="btn btn-primary btn-circle btn-block">UPDATE</button>
+                                                </div>
+                                                <div class="col-sm-2"></div>
+                                                <div class="form-group col-sm-4">
+                                                    <button type="submit" name="action" value="remove"class="btn btn-danger btn-circle btn-block">REMOVE</button>
+                                                </div>
+                                                <div class="col-sm-1"></div>
+                                            </div>
+
+                                        </div>
+                                    </form>
+                                
+
+                                </div>
+                            {% endfor %}
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <h3>PRICE DETAILS</h3>
+                            <table>
+                                <tr>
+                                    <td>Price ({{ cart|length }} items)</td>
+                                    <td>₹{{ cart.get_total_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Discount</td>
+                                    <td>- ₹{{ cart.get_total_discount }}</td>
+                                </tr>
+                                {% comment %} <tr>
+                                    <td>Coupons for you</td>
+                                    <td>- ₹100</td>
+                                </tr> {% endcomment %}
+                                <tr>
+                                    <td>Delivery Charges</td>
+                                    <td>
+                                        {% if cart.get_final_price > 1500 %}
+                                            <strike>₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}</strike>
+                                            &nbsp; ₹ {{ 0|floatformat:2|intcomma }}
+                                        {% else %}
+                                            ₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="total-amount">
+                                    <td>Total Amount</td>
+                                    <td>₹{{ cart.get_final_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
+                                </tr>
+                            </table>
+                            <button class="place-order-btn">PLACE ORDER</button>
+                            <div class="safe-payments">
+                                <p>Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                {% else %}
+                    <h3 class="module-title font-alt mb-0">Your Cart is empty </h3>
+                    <h4 class="module-title font-alt mb-0">Explore our wide selection and find something you like</h4>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const plusButtons = document.querySelectorAll('.plus-btn');
+            const minusButtons = document.querySelectorAll('.minus-btn');
+        
+            plusButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const quantityInput = document.getElementById('quantity-input-' + productId);
+                    let currentQuantity = parseInt(quantityInput.value);
+                    const maxQuantity = parseInt(quantityInput.getAttribute('data-max'));
+        
+                    if (currentQuantity < maxQuantity) {
+                        quantityInput.value = currentQuantity + 1;
+                    }
+                });
+            });
+        
+            minusButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    const quantityInput = document.getElementById('quantity-input-' + productId);
+                    let currentQuantity = parseInt(quantityInput.value);
+                    const minQuantity = parseInt(quantityInput.getAttribute('data-min'));
+        
+                    if (currentQuantity > minQuantity) {
+                        quantityInput.value = currentQuantity - 1;
+                    }
+                });
+            });
+        });
+        
+    </script>
+
+{% endblock content %}

@@ -3013,3 +3013,94 @@ td:last-child {
 tbody tr:last-child td {
   border-bottom: none;
 }
+
+
+/* CART */
+.cart-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.cart-item-details {
+  display: flex;
+  align-items: center;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.cart-item-info {
+  font-size: 18px;
+}
+
+.cart-item-pricing {
+  text-align: right;
+  font-size: 14px;
+}
+
+
+.cart-item-actions {
+  text-align: center;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.quantity-btn {
+  background: none;
+  border: 1px solid #d1cfcf;
+  margin: 1rem;
+  padding: 1rem; 
+  width: 2.5rem; 
+  height: 2.5rem;
+  cursor: pointer;
+  border-style: ridge;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.quantity-input {
+  width: 30px;
+  text-align: center;
+  border: none;
+}
+
+.total-amount td {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.savings {
+  color: green;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.place-order-btn {
+  width: 100%;
+  background-color: #fb641b;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+}
+
+.safe-payments {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #878787;
+  text-align: center;
+}

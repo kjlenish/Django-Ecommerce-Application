@@ -44,7 +44,12 @@
             </div>
           </div>
           <div class="row mb-20">
-            <div class="col-sm-10"><a class="btn btn-lg btn-block btn-round btn-b" href="#">Add To Cart</a></div>
+              {% if product.id|stringformat:"s" in cart.cart %}
+              <div class="col-sm-10"><a class="btn btn-lg btn-block btn-round btn-b" href="{% url 'cart' %}">Go To Cart</a></div>
+              {% else %}
+              <div class="col-sm-10"><a class="btn btn-lg btn-block btn-round btn-b" href="{% url 'add_to_cart' product.id %}">Add To Cart</a></div>
+              {% endif %}
+            
           </div>
           <div class="row mb-20">
             <div class="col-sm-12">

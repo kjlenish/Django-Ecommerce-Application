@@ -10,12 +10,12 @@
       <ul class="nav navbar-nav navbar-right">
 
         <li>
-          <form class="navbar-form" role="search" action="/search" method="GET">
+          <form class="navbar-form" role="search" action="{% url 'search' %}" method="GET">
             {% csrf_token %}
               <div class="input-group">
-                  <input type="text" class="form-control" placeholder="Search" aria-label="Search">
+                  <input type="text" class="form-control btn btn-circle" name="search_element" placeholder="Search" aria-label="Search">
                   <span class="input-group-btn">
-                    <button class="section-scroll btn btn-border-w btn-round" type="submit"><i class="fa fa-search"></i></button>&nbsp;
+                    <button class="section-scroll btn btn-border-w btn-circle" type="submit"><i class="fa fa-search"></i></button>&nbsp;
                   </span>
               </div>
           </form>
@@ -30,9 +30,9 @@
           </ul>
         </li>
 
-        <li><a href="#">
+        <li><a href="{% url 'cart' %}">
           <i class="fa fa-fw">&#xF07A;</i>
-          <span class="cart-item-number">2</span>
+          <span class="cart-item-number">{{ cart|length }}</span>
         </a></li>
 
           <li class="dropdown"><a data-toggle="dropdown">Profile</a>        

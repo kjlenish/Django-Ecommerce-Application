@@ -53,20 +53,21 @@
         <div class="row">
           
           {% for message in messages %}
-            <div class="col-sm-4"></div>
+            <div class="row">
+              <div class="col-sm-4"></div>
 
-            <div class="col-sm-4">
-              <div class="alert alert-{{ message.tags }} text-center" role="alert">
-                <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
-                <strong>Alert! </strong> {{ message }}
+              <div class="col-sm-4">
+                <div class="alert alert-{{ message.tags }} text-center" role="alert">
+                  <button class="close" type="button" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <strong>Alert! </strong> {{ message }}
+                </div>
               </div>
-            </div>
 
-            <div class="col-sm-4"></div>
-        
+              <div class="col-sm-4"></div>
+            </div>
           {% endfor %}
-        
-          </div>
+          
+        </div>
       {% endif %}
 
 
