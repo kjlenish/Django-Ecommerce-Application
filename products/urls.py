@@ -1,13 +1,13 @@
 from django.urls import path
-from .views import HomeView, CategoryView, ProductView, ProductDetails, OrderByProductView
+from .views import home_view, category_view, product_view, product_details, filter_product_view
 
 
 urlpatterns = [
-    path('', HomeView, name='home'),
-    path('categories/', CategoryView, name='categories'),
-    path('categories/<str:parent>/', CategoryView, name='categories'),
-    path('products/', ProductView, name='products'),
-    path('products/filter/<str:sequence>/', OrderByProductView, name='filter_products'),
-    path('products/<str:parent>/', ProductView, name='products'),
-    path('product/<int:pk>/', ProductDetails, name='product'),    
+    path('', home_view, name='home'),
+    path('categories/', category_view, name='categories'),
+    path('categories/<str:parent>/', category_view, name='categories'),
+    path('products/', product_view, name='products'),
+    path('products/filter/<str:sequence>/', filter_product_view, name='filter_products'),
+    path('products/<str:parent>/', product_view, name='products'),
+    path('product/<int:pk>/', product_details, name='product'),    
 ]

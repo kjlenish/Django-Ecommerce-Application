@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import JSONField
 from django.urls import reverse
 from django.utils.text import slugify
 

@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.db.models import Q
 from products.models import Product
+from cart.cart import Cart
 
 # Create your views here.
 
@@ -21,6 +22,12 @@ def user_login(request):
             if form.is_valid():
                 user = form.get_user()
                 login(request, user)
+                
+                cart = Cart(request)
+                user_profile = CustomerProfile.objects.get(user = request.user)
+                cart.cart = user_profile.previous_cart
+                cart.save()
+
                 messages.success(request, "Logged in successfully")
                 
                 return redirect('home')
@@ -39,6 +46,12 @@ def user_login(request):
 @login_required
 def user_logout(request):
     try:
+        cart = Cart(request)       
+        user_profile = CustomerProfile.objects.get(user = request.user)
+
+        user_profile.previous_cart=cart.cart
+        user_profile.save()
+        
         logout(request)
         messages.success(request, "You have been logged out... Seen you soon")
         return render(request, 'accounts/logout.html')
@@ -253,11 +266,15 @@ def update_user_password(request, username):
     
 
 def search(request):
-    if request.GET:
-        search_element = request.GET.get('search_element')
+    try:
+        if request.GET:
+            search_element = request.GET.get('search_element')
+            
+            products = Product.objects.filter(Q(name__icontains=search_element) | Q(category__name__icontains=search_element) | Q(description__icontains=search_element))
+                    
+            context = {'products': products}
         
-        products = Product.objects.filter(Q(name__icontains=search_element) | Q(category__name__icontains=search_element) | Q(description__icontains=search_element))
-                
-        context = {'products': products}
+        return render(request, 'products/products.html', context)
     
-    return render(request, 'products/products.html', context)
+    except Exception as e:
+        return render(request, 'lost.html')

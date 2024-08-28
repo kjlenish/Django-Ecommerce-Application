@@ -3,55 +3,71 @@ from . models import Category, Product
 
 # Create your views here.
 
-def HomeView(request):
-    featured_products = Product.objects.filter(is_featured=True)
-    new_arrivals = Product.objects.order_by('-date_created')
+def home_view(request):
+    try:
+        featured_products = Product.objects.filter(is_featured=True)
+        new_arrivals = Product.objects.order_by('-date_created')
 
-    context = {"featured_products": featured_products, "new_arrivals": new_arrivals}
-    return render(request, 'products/home.html', context)
-
-
-def ProductView(request, filter_category=None):
-    if filter_category:
-        category = Category.objects.get(slug=filter_category)
-        products = Product.objects.filter(category=category)
-    
-    else:
-        products = Product.objects.all()
-    
-    context = {'products': products}
-    
-    return render(request, 'products/products.html', context)
-
-
-def OrderByProductView(request, sequence):
-    if sequence == 'exclusive':
-        products = Product.objects.filter(is_featured=True)
-    
-    elif sequence == 'new':
-        products = Product.objects.order_by('-date_created')
-    
-    else:
-        products = Product.objects.all()
-    
-    context = {'products': products}
-    
-    return render(request, 'products/products.html', context)
-
-
-def CategoryView(request, parent=None):
-    if parent:
-        categories = Category.objects.filter(parent_category__slug=parent)
+        context = {"featured_products": featured_products, "new_arrivals": new_arrivals}
         
-        if categories:
-            context = {"categories": categories}
-            return render(request, 'products/categories.html', context)
+        return render(request, 'products/home.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+
+
+def product_view(request, filter_category=None):
+    try:
+        if filter_category:
+            category = Category.objects.get(slug=filter_category)
+            products = Product.objects.filter(category=category)
         
-        return ProductView(request, parent)
+        else:
+            products = Product.objects.all()
         
-    categories = Category.objects.filter(parent_category__isnull=True)
-    context = {"categories": categories}
-    return render(request, 'products/categories.html', context)
+        context = {'products': products}
+        
+        return render(request, 'products/products.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+
+
+def filter_product_view(request, sequence):
+    try:
+        if sequence == 'exclusive':
+            products = Product.objects.filter(is_featured=True)
+        
+        elif sequence == 'new':
+            products = Product.objects.order_by('-date_created')
+        
+        else:
+            products = Product.objects.all()
+        
+        context = {'products': products}
+        
+        return render(request, 'products/products.html', context)
+    except Exception as e:
+        return render(request, 'lost.html')
+
+def category_view(request, parent=None):
+    try:
+        if parent:
+            categories = Category.objects.filter(parent_category__slug=parent)
+            
+            if categories:
+                context = {"categories": categories}
+                return render(request, 'products/categories.html', context)
+            
+            return ProductView(request, parent)
+            
+        categories = Category.objects.filter(parent_category__isnull=True)
+        context = {"categories": categories}
+        
+        return render(request, 'products/categories.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
 
 
 def get_categories(child_category, category_list = None):
@@ -63,15 +79,20 @@ def get_categories(child_category, category_list = None):
         return get_categories(child_category.parent_category, category_list)
     
     category_list.reverse()
+    
     return category_list
         
 
-def ProductDetails(request, pk):
-    product = Product.objects.get(id=pk)
-    all_categories = get_categories(product.category)
+def product_details(request, pk):
+    try:
+        product = Product.objects.get(id=pk)
+        all_categories = get_categories(product.category)
+        
+        related_products = Product.objects.filter(category=product.category).exclude(id=product.id)
+
+        context = {"product": product, "all_categories": all_categories, "related_products": related_products}
+
+        return render(request, 'products/product_details.html', context)
     
-    related_products = Product.objects.filter(category=product.category).exclude(id=product.id)
-
-    context = {"product": product, "all_categories": all_categories, "related_products": related_products}
-
-    return render(request, 'products/product_details.html', context)
+    except Exception as e:
+        return render(request, 'lost.html')
