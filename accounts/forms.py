@@ -135,9 +135,6 @@ class UpdateCustomerProfileForm(forms.ModelForm):
 
 
 class UpdatePasswordForm(SetPasswordForm):    
-    # class Meta:
-    #     model = User
-    #     fields = ['new_password1', 'new_password1']
     
     def __init__(self, user, *args, **kwargs):
         super(UpdatePasswordForm, self).__init__(user, *args, **kwargs)

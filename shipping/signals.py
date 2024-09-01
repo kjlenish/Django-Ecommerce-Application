@@ -6,4 +6,4 @@ from .models import Address
 @receiver(post_save, sender=User)
 def create_address(sender, instance, created, **kwargs):
     if created:
-        Address.objects.create(user=instance, default=True)
+        Address.objects.create(user=instance, is_primary=True)

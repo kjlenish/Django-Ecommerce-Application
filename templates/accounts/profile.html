@@ -112,10 +112,10 @@
     <div class="row">
       <div class="col-sm-3"></div>
       <div class="col-sm-3">
-      <a class="btn btn-primary btn-circle btn-block" type="button" href={% url "update_profile" user.username %}>Update Profile</a>
+      <a class="btn btn-primary btn-circle btn-block" type="button" href="{% url 'update_profile' user.username %}">Update Profile</a>
       </div>
       <div class="col-sm-3">
-        <a class="btn btn-primary btn-circle btn-block" type="button" href={% url "update_password" user.username %}>Update Password</a>
+        <a class="btn btn-primary btn-circle btn-block" type="button" href="{% url 'update_password' user.username %}">Update Password</a>
         </div>
       <div class="col-sm-3"></div>
     </div>

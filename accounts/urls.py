@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import user_login, user_logout, user_details, user_register, user_profile, update_user_profile, update_user_address, update_user_password, search
+from .views import user_login, user_logout, user_details, user_register, user_profile, update_user_profile, update_primary_address, update_user_password, search
 from django.contrib.auth import views as auth_views
 
 
@@ -12,6 +12,6 @@ urlpatterns = [
     path('profile/<str:username>/', user_profile, name='profile'),
     path('profile/<str:username>/update/', update_user_profile, name='update_profile'),
     path('profile/<str:username>/password/', update_user_password, name='update_password'),
-    path('profile/<str:username>/address/', update_user_address, name='update_address'),
+    path('profile/<str:username>/address/', update_primary_address, name='update_address'),
     
 ]

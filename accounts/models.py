@@ -12,7 +12,7 @@ class CustomerProfile(models.Model):
                 ('Other', 'Other')
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='customer_profile')
-    gender = models.CharField(max_length=254, blank=True, null=True)
+    gender = models.CharField(max_length=254, choices=gender_choice, blank=True, null=True)
     dob = models.DateField(default=None, blank=True, null=True)
     email = models.EmailField(max_length=254, blank=True, null=True)
     country_code = models.CharField(default="+91", max_length=5, blank=True, null=True)

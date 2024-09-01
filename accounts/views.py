@@ -99,7 +99,7 @@ def user_details(request):
             profile_form = CustomerProfileForm(request.POST or None)
             
         try:
-            address = Address.objects.get(user=request.user, default=True)
+            address = Address.objects.get(user=request.user, is_primary=True)
             address_form = CustomerAddressForm(request.POST or None, instance=address)
         except ObjectDoesNotExist:
             address_form = CustomerAddressForm(request.POST or None)
@@ -129,7 +129,7 @@ def user_details(request):
                 
                 address.first_name = address.user.first_name
                 address.last_name = address.user.last_name
-                address.default = True
+                address.is_primary = True
                 address.save()
                 
                 profile.primary_address = address
@@ -215,11 +215,11 @@ def update_user_profile(request, username):
     
 
 @login_required
-def update_user_address(request, username):
+def update_primary_address(request, username):
     try:
         try:
             user = User.objects.get(username=username)
-            address = Address.objects.get(user=user, default=True)
+            address = Address.objects.get(user=user, is_primary=True)
             address_form = UpdateCustomerAddressForm(request.POST or None, instance=address)
         except Address.DoesNotExist:
             address_form = UpdateCustomerAddressForm(request.POST or None)

@@ -19,7 +19,8 @@ class Address(models.Model):
     state = models.TextField(max_length=254, blank=True, null=True)
     country = models.TextField(max_length=254, blank=True, null=True)
     date_updated = models.DateTimeField(auto_now=True)
-    default = models.BooleanField(default=False)
+    is_primary = models.BooleanField(default=False)
+    is_default = models.BooleanField(default=False)
     
 
     
@@ -27,11 +28,21 @@ class Address(models.Model):
     class Meta:
         verbose_name = ("Address")
         verbose_name_plural = ("Addresses")
-
+    
+    
+    def save(self, is_default=False, *args, **kwargs):
+        if is_default:
+            Address.objects.filter(user=self.user).update(is_default=False)
+            self.is_default = True
+        
+        return super().save(*args, **kwargs)
+    
     def __str__(self):
         return (f"{self.address_line1}, {self.address_line2}, {self.state}, {self.country}")
 
     def get_absolute_url(self):
         return reverse("Address_detail", kwargs={"pk": self.pk})
+    
+    
 
 
