@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">My Orders</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                
+                {% if orders %}
+                    <div class="row">
+
+                        {% for order in orders %}
+
+                            <div class="row order_set">
+                                <div class="col-sm-7">
+                            
+                                    {% for order_item in order.items.all %}
+                                        <div class="cart-item">
+
+                                            <div class="row">
+                                                <div class="cart-item-details">
+                                                    <img src="{{ order_item.product.images.first.image.url }}" alt="{{ order_item.product.name }}" class="cart-item-image"/>
+                                                    <div class="row">
+                                                        <div class="cart-item-info centered-text">
+                                                            <h3>{{ order_item.product.name }}</h3>                                    
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="cart-item-info centered-text col-sm-6">
+                                                            {{ order_item.quantity}}&nbsp; &nbsp; &nbsp; * &nbsp; &nbsp; &nbsp; ₹ {{ order_item.price}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="cart-item-info">
+                                                            <div class="col-sm-6 centered-text">
+                                                                <h4><strong>₹ {{ order_item.get_item_price }}</strong></h4>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                        </div>
+                                    {% endfor %}
+                                
+                                </div>
+
+                                <div class="col-sm-5">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="cart-item-info centered-text">
+                                                {% if order.order_status == "Order Shipped" %}
+                                                    {{ order.order_status }} on {{order.date_shipped.date}}
+                                                {% else %}
+                                                    {% if order.order_status == "Order Delivered" %}
+                                                        {{ order.order_status }} on {{order.date_delivered.date}}
+                                                    {% else %}
+                                                        {% if order.order_status == "Order Cancelled" %}
+                                                            {{ order.order_status }} on {{order.date_cancelled.date}}
+                                                        {% else %}
+                                                            {{ order.order_status }}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="cart-item-info centered-text">
+                                                Amount paid: {{ order.order_amount }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+                    <h3 class="module-title font-alt mb-0">You have no Orders </h3>
+                    <h4 class="module-title font-alt mb-0">Explore our wide selection and find something you like</h4>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

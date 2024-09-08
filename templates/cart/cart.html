@@ -7,7 +7,7 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-6 col-sm-offset-3">
-            <h1 class="module-title font-alt mb-0">Your Cart</h1>
+            <h1 class="module-title font-alt mb-0">My Cart</h1>
           </div>
         </div>
       </div>
@@ -21,7 +21,7 @@
             <div class="row">
                 
                 {% if cart %}
-                    <div class="col-sm-8">
+                    <div class="col-sm-7">
                         <div class="row">
 
                             {% for item in cart %}
@@ -93,7 +93,8 @@
 
                     </div>
 
-
+                    <div class="col-sm-1"></div>
+                    
                     <div class="col-sm-4">
                         <div class="row">
                             <h3>PRICE DETAILS</h3>
@@ -113,9 +114,9 @@
                                 <tr>
                                     <td>Delivery Charges</td>
                                     <td>
-                                        {% if cart.get_final_price > 1500 %}
+                                        {% if cart.get_discounted_price > 1500 %}
                                             <strike>₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}</strike>
-                                            &nbsp; ₹ {{ 0|floatformat:2|intcomma }}
+                                            &nbsp; FREE
                                         {% else %}
                                             ₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}
                                         {% endif %}
@@ -129,7 +130,7 @@
                                     <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
                                 </tr>
                             </table>
-                            <button class="place-order-btn">PLACE ORDER</button>
+                            <a href="{% url 'check_out'%}"><button class="place-order-btn">PLACE ORDER</button></a>
                             <div class="safe-payments">
                                 <p>Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
                             </div>

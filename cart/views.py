@@ -2,9 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .cart import Cart
 from products.models import Product
 from django.contrib import messages
-
 # Create your views here.
-
 
 def cart_view(request):
     try:

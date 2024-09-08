@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from . models import Category, Product
+from .models import Category, Product
 
 # Create your views here.
 
@@ -59,7 +59,7 @@ def category_view(request, parent=None):
                 context = {"categories": categories}
                 return render(request, 'products/categories.html', context)
             
-            return ProductView(request, parent)
+            return product_view(request, parent)
             
         categories = Category.objects.filter(parent_category__isnull=True)
         context = {"categories": categories}

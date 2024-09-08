@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Delivery details</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                
+                {% if order %}
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <form class="form" method="POST">
+                                {% csrf_token %}
+                                <h3>Choose the delivery address</h3><br>
+                                {% if default_address %}
+                                    <div class="cart-item form-group">
+                                        <div class="row">
+                                            <input type="hidden" name="address_id" value="{{ default_address.id }}"/>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                                            </div>
+
+                                            <div class="col-sm-11">
+                                                <div class="cart-item-details">
+                                                    <label class="form-check-label" for="flexRadioDefault1">
+                                                        <h5><strong>{{ default_address.first_name }} {{ default_address.last_name }} &nbsp; &nbsp; &nbsp;
+                                                            &nbsp; &nbsp; &nbsp;{{ default_address.country_code }} {{ default_address.phone }}<strong><h5>
+                                                    </label>
+                                                    <h5>{{ default_address.address_line1 }}, {{ default_address.city }}, {{ default_address.zip_code}} <br>
+                                                         {{ default_address.state }}, {{ default_address.country }}<h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <h5 class="text-center">No default Address found<h5>
+                                {% endif %}
+                                
+
+                                {% for address in addresses %}
+                                    <div class="cart-item form-group">
+                                        <div class="row">
+                                            <input type="hidden" name="address_id" value="{{ address.id }}"/>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                            </div>
+    
+                                            <div class="col-sm-11">
+                                                <div class="cart-item-details">
+                                                    <label class="form-check-label font-weight-bold" for="flexRadioDefault1">
+                                                        <h5><strong>{{ address.first_name }} {{ address.last_name }} &nbsp; &nbsp; &nbsp;
+                                                            &nbsp; &nbsp; &nbsp;{{ address.country_code }} {{ address.phone }}<strong><h5>
+                                                    </label>
+                                                    <h5>{{ address.address_line1 }}, {{ address.city }}, {{ address.zip_code}} <br> 
+                                                        {{ address.state }}, {{ address.country }}<h5>
+                                                </div>
+                                            </div>
+                                        </div>                            
+
+                                    </div>
+                                {% endfor %}
+
+                                <div class="form-check">
+                                    <input class="form-check-input" name="make_default" type="checkbox" value=True id="defaultCheck1">
+                                    <label class="form-check-label" for="defaultCheck1">
+                                      <h6>Set as default address<h6>
+                                    </label>
+                                </div>
+
+                            </form>
+
+                            <div class="row">
+                                <div class="col-sm-3"></div>
+                                <div class="col-sm-6">
+                                    <button class="place-order-btn">DELIVER HERE</button>
+                                </div>
+                                <div class="col-sm-3"></div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 cart-item-info">   
+                                    <h3>Add New Address
+                                        <a href="{% url 'add_address' %}">HERE</a>
+                                    <h3>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-1"></div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <h3>PRICE DETAILS</h3>
+                            <table>
+                                <tr>
+                                    <td>Price ({{ cart|length }} items)</td>
+                                    <td>₹{{ cart.get_discounted_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery Charges</td>
+                                    <td>
+                                        {% if cart.get_discounted_price > 1500 %}
+                                            <strike>₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}</strike>
+                                            &nbsp;  FREE
+                                        {% else %}
+                                            ₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="total-amount">
+                                    <td>Total Amount</td>
+                                    <td>₹{{ cart.get_final_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                {% else %}
+                    <h3 class="module-title font-alt mb-0">Your Cart is empty </h3>
+                    <h4 class="module-title font-alt mb-0">Explore our wide selection and find something you like</h4>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

@@ -97,10 +97,17 @@ class Cart:
         
         return delivery_charge
     
-    def get_final_price(self):
+    def get_discounted_price(self):
         total_price = self.get_total_price()
         total_discount = self.get_total_discount()
-        final_price = total_price - total_discount
+        discounted_price = total_price - total_discount
+        
+        return round(discounted_price, 2)
+        
+    
+    def get_final_price(self):
+        final_price = self.get_discounted_price()
+        
         if final_price < 1500:
             delivery_charges = self.get_delivery_charge()
             final_price += delivery_charges

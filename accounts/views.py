@@ -30,7 +30,8 @@ def user_login(request):
 
                 messages.success(request, "Logged in successfully")
                 
-                return redirect('home')
+                return redirect(request.GET.get('next', 'home'))
+                
             else:
                 messages.warning(request, "Invalid details... Please try again !!")
 

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Order Summary</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                
+                {% if order_items %}
+                    <div class="col-sm-7">
+                        <div class="row">
+
+                            {% for order_item in order_items %}
+                                <div class="cart-item">
+
+                                    <div class="row">
+                                        <div class="cart-item-details">
+                                            <img src="{{ order_item.product.images.first.image.url }}" alt="{{ order_item.product.name }}" class="cart-item-image"/>
+                                            <div class="row">
+                                                <div class="cart-item-info centered-text">
+                                                    <h3>{{ order_item.product.name }}</h3>                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div>
+                                            <div class="row">
+                                                <div class="cart-item-info centered-text">
+                                                    {{ order_item.quantity}}&nbsp; &nbsp; &nbsp; * &nbsp; &nbsp; &nbsp; ₹ {{ order_item.price}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div>
+                                            <div class="row">
+                                                <div class="cart-item-info">
+                                                    <div class="col-sm-2"></div>
+                                                    <div class="col-sm-8 centered-text">
+                                                        <h4><strong>₹ {{ order_item.get_item_price }}</strong></h4>
+                                                    </div>
+                                                    <div class="col-sm-2"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+          
+                                </div>
+                            {% endfor %}
+                            
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-6">
+                                <a href="#"><button class="place-order-btn">CONTINUE TO PAYMENT</button></a>
+                            </div>
+                            <div    lass="col-sm-3"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-1"></div>
+
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <h3>PRICE DETAILS</h3>
+                            <table>
+                                <tr>
+                                    <td>Price ({{ cart|length }} items)</td>
+                                    <td>₹{{ cart.get_discounted_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Delivery Charges</td>
+                                    <td>
+                                        {% if cart.get_discounted_price > 1500 %}
+                                            <strike>₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}</strike>
+                                            &nbsp;  FREE
+                                        {% else %}
+                                            ₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr class="total-amount">
+                                    <td>Total Amount</td>
+                                    <td>₹{{ cart.get_final_price }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                {% else %}
+                    <h3 class="module-title font-alt mb-0">Your Cart is empty </h3>
+                    <h4 class="module-title font-alt mb-0">Explore our wide selection and find something you like</h4>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
