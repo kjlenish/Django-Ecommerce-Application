@@ -3014,6 +3014,16 @@ tbody tr:last-child td {
   border-bottom: none;
 }
 
+/* MESSAGES */
+
+.alert-overlay {
+  position: fixed;
+  z-index: 99999; 
+  display: inline-block;    
+}
+
+
+
 
 /* CART */
 .cart-item {
@@ -3106,8 +3116,8 @@ tbody tr:last-child td {
 }
 
 .centered-text {
-  text-align: center;      /* Center the text horizontally */
-  white-space: nowrap;     /* Prevent text from wrapping to the next line */
+  text-align: center;      
+  white-space: nowrap;     
 }
 
 .order_set {
@@ -3115,4 +3125,9 @@ tbody tr:last-child td {
   padding-left: 5rem;
   background-color: #eeebeb;
   margin:2rem;
+}
+
+.btn-pad {
+  padding: 1rem;
+  margin: 1rem;
 }

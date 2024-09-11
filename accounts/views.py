@@ -237,7 +237,7 @@ def update_primary_address(request, username):
             else:
                 messages.warning(request, "Invalid details... Please try again !!")
             
-        return render(request, 'accounts/update_address.html', context)
+        return render(request, 'shipping/update_address.html', context)
     
     except Exception as e:
         return render(request, 'lost.html')

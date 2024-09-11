@@ -45,6 +45,7 @@
               {% if user.is_authenticated %}
               <li><a href="{% url 'profile' user.username %}">{{ user.username }}</a></li>
               <li><a href="{% url 'all_orders' %}">Orders</a></li>
+              <li><a href="{% url 'manage_addresses' %}">Addresses</a></li>
               <li><a href="{% url 'logout' %}">Log Out</a></li>
               {% endif %}
 

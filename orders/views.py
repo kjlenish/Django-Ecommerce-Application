@@ -4,13 +4,13 @@ from django.contrib.auth.models import User
 from .models import Order, OrderItem
 from products.models import Product
 from shipping.models import Address
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-
+@login_required
 def place_order(request):
     cart = Cart(request)
-    print(cart.cart)
     user = User.objects.get(username=request.user)
     
     order, created = Order.objects.get_or_create(customer=user, order_status='In Cart')
@@ -29,10 +29,7 @@ def place_order(request):
         order.save()
         return order_summary(request, order)
     
-    
-    
-    
-    
+
     for product_id, attribute in cart.cart.items():
         product = Product.objects.get(id=product_id)
         price = product.price
@@ -59,11 +56,11 @@ def place_order(request):
     addresses = Address.objects.filter(user=user).exclude(is_default=True)
         
     context = {'order': order, 'default_address': default_address , 'addresses': addresses}
-    # print(context)
     
     return render(request, 'orders/delivery_details.html', context)
         
-    
+
+@login_required 
 def order_summary(request, order):
     order_items = OrderItem.objects.filter(order=order)
     context = {'order_items': order_items}
@@ -71,6 +68,7 @@ def order_summary(request, order):
     return render(request, 'orders/order_summary.html', context)
     
 
+@login_required
 def view_orders(request):
     user = User.objects.get(username=request.user)
     orders = Order.objects.filter(customer=user).exclude(order_status='In Cart')

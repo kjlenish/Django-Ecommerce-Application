@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">My Addresses</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module">
+        <div class="container">
+            <div class="row">
+                
+                {% if addresses %}
+                    <div class="row">
+
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+
+                            <div class="col-sm-6">
+                                <div class="row btn-pad">
+                                    <a href="{% url 'add_address' %}"><button class="btn btn-success btn-circle btn-block">Add new Address</button></a>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3 btn-pad"></div>
+                        </div>
+
+                        {% for address in addresses %}
+
+                            <div class="row cart-item">
+
+                                <div class="col-sm-1"></div>
+                                
+                                <div class="col-sm-5">
+                                    <div class="row">
+                                        
+                                        <div class="row">
+                                            <div class="cart-item-info">
+                                                <h5><strong>{{ address.first_name }} {{ address.last_name }} &nbsp; &nbsp; &nbsp;
+                                                    &nbsp; &nbsp; &nbsp;{{ address.country_code }} {{ address.phone }}<strong><h5>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row">
+                                            <div class="cart-item-info">
+                                                <h5>{{ address.address_line1 }}, {{ address.city }}, {{ address.zip_code}} <br>
+                                                    {{ address.state }}, {{ address.country }}<h5>
+                                            </div>
+                                        </div>
+                
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2"></div>
+
+                                <div class="col-sm-3">
+                                    <div class="row">
+                                        
+                                        <div class="row btn-pad">
+                                            <a href="{% url 'update_address' address.id %}"><button class="btn btn-primary btn-circle btn-block">Edit</button></a>
+                                        </div>
+
+                                        <div class="row btn-pad">
+                                            <a href="{% url 'remove_address' address.id %}"><button class="btn btn-danger btn-circle btn-block">Remove</button></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-sm-1"></div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+                    <h3 class="module-title font-alt mb-0">You have not added any Addresses </h3>
+                    <h4 class="module-title font-alt mb-0">Please add a new address <a href="{% url 'add_address' %}" >here</a></h4>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}
