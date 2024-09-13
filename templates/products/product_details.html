@@ -20,20 +20,41 @@
         </div>
         <div class="col-sm-6">
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 centered-text">
               <h1 class="product-title font-alt">{{ product.name }}</h1>
             </div>
           </div>
           <div class="row mb-20">
-            <div class="col-sm-12">
+            <div class="col-sm-12 centered-text">
               <div class="price font-alt"><span class="amount">
                 {% if product.is_sale %}
                 <strike>₹ {{ product.price|floatformat:2|intcomma }}</strike>
                 &nbsp; ₹ {{ product.sale_price|floatformat:2|intcomma }}
-              {% else %}
-                ₹ {{ product.price|floatformat:2|intcomma }}
-              {% endif %}
+                {% else %}
+                  ₹ {{ product.price|floatformat:2|intcomma }}
+                {% endif %}
               </span></div>
+
+              <div class="row">
+                
+                {% if product.get_average_rating != '0' %}
+                Average rating: <span>
+                  <div class="star-rating">
+                    {% for i in "12345"|slice:":" %}
+                        {% if product.get_average_rating >= i %}
+                            <span class="full">&#9733;</span>
+                        {% elif product.get_average_rating >= i|add:"-0.5" %}
+                            <span class="half">&#9733;</span>
+                        {% else %}
+                            <span class="empty">&#9733;</span>
+                        {% endif %}
+                    {% endfor %}
+                  </div>
+                {% else %}
+                <p>This product has no rating yet<p>
+                {% endif %}
+                </span>
+              </div>
             </div>
           </div>
           <div class="row mb-20">
@@ -69,7 +90,7 @@
           <ul class="nav nav-tabs font-alt" role="tablist">
             <li class="active"><a href="#description" data-toggle="tab"><span class="icon-tools-2"></span>Description</a></li>
             <li><a href="#specifications" data-toggle="tab"><span class="icon-tools-2"></span>Specifications</a></li>
-            <li><a href="#reviews" data-toggle="tab"><span class="icon-tools-2"></span>Reviews (2)</a></li>
+            <li><a href="#reviews" data-toggle="tab"><span class="icon-tools-2"></span>Reviews</a></li>
           </ul>
           
           <div class="tab-content">
@@ -100,67 +121,37 @@
             
             <div class="tab-pane" id="reviews">
               <div class="comments reviews">
-                <div class="comment clearfix">
-                  <div class="comment-avatar"><img src="" alt="avatar"/></div>
-                  <div class="comment-content clearfix">
-                    <div class="comment-author font-alt"><a href="#">John Doe</a></div>
-                    <div class="comment-body">
-                      <p>The European languages are members of the same family. Their separate existence is a myth. For science, music, sport, etc, Europe uses the same vocabulary. The European languages are members of the same family. Their separate existence is a myth.</p>
-                    </div>
-                    <div class="comment-meta font-alt">Today, 14:55 -<span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star-off"></i></span>
+                  
+                {% for review in reviews %}
+
+                  <div class="comment clearfix">
+                    <div class="comment-content clearfix">
+                      <div class="comment-author font-alt">{{ review.user.first_name }} {{ review.user.last_name }}</div>
+                      <div class="comment-body">
+                        
+                        {% if review.review %}
+                          <p>{{ review.review }}</p>
+                        {% endif %}
+                      
+                      </div>
+                      <div class="comment-meta font-alt">{{ review.date_updated }} -<span>
+                        <div class="star-rating">
+                          {% for i in "12345"|slice:":" %}
+                              {% if review.rating >= i %}
+                                  <span class="full">&#9733;</span>
+                              {% elif review.rating >= i|add:"-0.5" %}
+                                  <span class="half">&#9733;</span>
+                              {% else %}
+                                  <span class="empty">&#9733;</span>
+                              {% endif %}
+                          {% endfor %}
+                        </div></span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="comment clearfix">
-                  <div class="comment-avatar"><img src="" alt="avatar"/></div>
-                  <div class="comment-content clearfix">
-                    <div class="comment-author font-alt"><a href="#">Mark Stone</a></div>
-                    <div class="comment-body">
-                      <p>Europe uses the same vocabulary. The European languages are members of the same family. Their separate existence is a myth.</p>
-                    </div>
-                    <div class="comment-meta font-alt">Today, 14:59 -<span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star"></i></span><span><i class="fa fa-star star-off"></i></span><span><i class="fa fa-star star-off"></i></span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="comment-form mt-30">
-                <h4 class="comment-form-title font-alt">Add review</h4>
-                <form method="post">
-                  <div class="row">
-                    <div class="col-sm-4">
-                      <div class="form-group">
-                        <label class="sr-only" for="name">Name</label>
-                        <input class="form-control" id="name" type="text" name="name" placeholder="Name"/>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="form-group">
-                        <label class="sr-only" for="email">Name</label>
-                        <input class="form-control" id="email" type="text" name="email" placeholder="E-mail"/>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="form-group">
-                        <select class="form-control">
-                          <option selected="true" disabled="">Rating</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-12">
-                      <div class="form-group">
-                        <textarea class="form-control" id="" name="" rows="4" placeholder="Review"></textarea>
-                      </div>
-                    </div>
-                    <div class="col-sm-12">
-                      <button class="btn btn-round btn-d" type="submit">Submit Review</button>
-                    </div>
-                  </div>
-                </form>
+
+                {% endfor %}
+                
               </div>
             </div>
           </div>

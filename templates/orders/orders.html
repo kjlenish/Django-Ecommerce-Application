@@ -16,7 +16,7 @@
 
 
 {% block content %}
-    <section class="module">
+    <section class="module order_body">
         <div class="container">
             <div class="row">
                 
@@ -47,6 +47,10 @@
                                                     <div class="row">
                                                         <div class="cart-item-info centered-text col-sm-6">
                                                             {{ order_item.quantity}}&nbsp; &nbsp; &nbsp; * &nbsp; &nbsp; &nbsp; ₹ {{ order_item.price}}
+                                                        </div>
+
+                                                        <div class="cart-item-info centered-text col-sm-6">
+                                                            <a class="rate-text" href="{% url 'add_review' order_item.product.id %}"><span>&#9733;</span> Rate and Review Product</a>
                                                         </div>
                                                     </div>
                                                 </div>

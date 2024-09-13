@@ -67,6 +67,21 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse("Product_detail", kwargs={"pk": self.pk})
+    
+    def get_average_rating(self):
+        total_rating = 0
+        reviews = self.reviews.all()
+        
+        if reviews:
+            for i, review in enumerate(reviews, 1):            
+                total_rating += int(review.rating)
+                        
+            avg_rating = total_rating / i
+        
+        else:
+            avg_rating = 0
+        
+        return str(avg_rating)
 
 
 class ProductImage(models.Model):

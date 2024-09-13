@@ -3022,7 +3022,40 @@ tbody tr:last-child td {
   display: inline-block;    
 }
 
+/* RATING */
 
+.star-rating {
+  display: inline-block;
+  font-size: 1.5rem; /* Adjust the size of the stars */
+  color: #FFD700; /* Gold color for stars */
+}
+
+.star-rating .empty {
+  color: #e0e0e0; /* Light gray for empty stars */
+}
+
+.star-rating .half {
+  position: relative;
+  display: inline-block;
+  color: #FFD700; /* Gold color for half stars */
+}
+
+.star-rating .half::before {
+  content: '\2605'; /* Unicode for a filled star */
+  position: absolute;
+  left: 0;
+  color: #FFD700; /* Filled color */
+  width: 50%; /* Only fill half the star */
+  overflow: hidden;
+}
+
+.star-rating .full {
+  color: #FFD700; /* Gold color for full stars */
+}
+
+.rate-text {
+  color: #6F00FF; 
+}
 
 
 /* CART */
@@ -3120,10 +3153,13 @@ tbody tr:last-child td {
   white-space: nowrap;     
 }
 
+.order_body {
+  background-color: #B9D9EB;
+}
 .order_set {
   padding: 2rem;
   padding-left: 5rem;
-  background-color: #eeebeb;
+  background-color: white;
   margin:2rem;
 }
 

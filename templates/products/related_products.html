@@ -16,12 +16,32 @@
                 <img src="{{ rel_product.images.first.image.url }}" alt="{{ rel_product.name }}"/>
             </a></div>
             <h4 class="shop-item-title font-alt"><a href="{% url 'product' rel_product.id %}">{{ rel_product.name }}</a></h4>
-            {% if rel_product.is_sale %}
+              {% if rel_product.is_sale %}
                 <strike>₹ {{ rel_product.price|floatformat:2|intcomma }}</strike>
                 &nbsp; ₹ {{ rel_product.sale_price|floatformat:2|intcomma }}
               {% else %}
                 ₹ {{ rel_product.price|floatformat:2|intcomma }}
               {% endif %}
+
+              <div class="row">
+                
+                {% if rel_product.get_average_rating != '0' %}
+                  <div class="star-rating">
+                    {% for i in "12345"|slice:":" %}
+                        {% if rel_product.get_average_rating >= i %}
+                            <span class="full">&#9733;</span>
+                        {% elif rel_product.get_average_rating >= i|add:"-0.5" %}
+                            <span class="half">&#9733;</span>
+                        {% else %}
+                            <span class="empty">&#9733;</span>
+                        {% endif %}
+                    {% endfor %}
+                  </div>
+                {% else %}
+                <p>This product has no rating yet<p>
+                {% endif %}
+              
+              </div>
           </div>
         </div>
         {% endfor %}

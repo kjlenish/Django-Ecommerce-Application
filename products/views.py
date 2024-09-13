@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Category, Product
+from reviews.models import Review
 
 # Create your views here.
 
@@ -89,8 +90,10 @@ def product_details(request, pk):
         all_categories = get_categories(product.category)
         
         related_products = Product.objects.filter(category=product.category).exclude(id=product.id)
+        
+        reviews = Review.objects.filter(product=product)
 
-        context = {"product": product, "all_categories": all_categories, "related_products": related_products}
+        context = {"product": product, "all_categories": all_categories, "related_products": related_products, "reviews": reviews}
 
         return render(request, 'products/product_details.html', context)
     
