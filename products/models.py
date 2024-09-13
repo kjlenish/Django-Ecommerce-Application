@@ -66,7 +66,7 @@ class Product(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("Product_detail", kwargs={"pk": self.pk})
+        return reverse("product_detail", kwargs={"pk": self.pk})
     
     def get_average_rating(self):
         total_rating = 0

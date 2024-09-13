@@ -12,12 +12,12 @@
             {% for new_product in new_arrivals %}
             <div class="col-sm-6 col-md-3 col-lg-3">
                 <div class="shop-item">
-                    <a href="{% url 'product' new_product.id %}">
+                    <a href="{{ new_product.get_absolute_url }}">
                         <div class="shop-item-image">
                             <img src="{{ new_product.images.first.image.url }}" alt="{{ new_product.name }}"/>
                         </div>
                     </a>
-                  <h4 class="shop-item-title font-alt"><a href="{% url 'product' new_product.id %}">{{ new_product.name }}</a></h4>
+                  <h4 class="shop-item-title font-alt"><a href="{{ new_product.get_absolute_url }}">{{ new_product.name }}</a></h4>
                     {% if new_product.is_sale %}
                       <strike>₹ {{ new_product.price|floatformat:2|intcomma }}</strike>
                       &nbsp; ₹ {{ new_product.sale_price|floatformat:2|intcomma }}

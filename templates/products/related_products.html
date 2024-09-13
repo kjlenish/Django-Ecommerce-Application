@@ -2,50 +2,55 @@
 
 <section class="module-small">
     <div class="container">
-      <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
-          <h2 class="module-title font-alt">Related Products</h2>
-        </div>
-      </div>
-      <div class="row multi-columns-row">
-
-        {% for rel_product in related_products %}
-        <div class="col-sm-6 col-md-3 col-lg-3">
-          <div class="shop-item">
-            <div class="shop-item-image"><a href="{% url 'product' rel_product.id %}">
-                <img src="{{ rel_product.images.first.image.url }}" alt="{{ rel_product.name }}"/>
-            </a></div>
-            <h4 class="shop-item-title font-alt"><a href="{% url 'product' rel_product.id %}">{{ rel_product.name }}</a></h4>
-              {% if rel_product.is_sale %}
-                <strike>₹ {{ rel_product.price|floatformat:2|intcomma }}</strike>
-                &nbsp; ₹ {{ rel_product.sale_price|floatformat:2|intcomma }}
-              {% else %}
-                ₹ {{ rel_product.price|floatformat:2|intcomma }}
-              {% endif %}
-
-              <div class="row">
-                
-                {% if rel_product.get_average_rating != '0' %}
-                  <div class="star-rating">
-                    {% for i in "12345"|slice:":" %}
-                        {% if rel_product.get_average_rating >= i %}
-                            <span class="full">&#9733;</span>
-                        {% elif rel_product.get_average_rating >= i|add:"-0.5" %}
-                            <span class="half">&#9733;</span>
-                        {% else %}
-                            <span class="empty">&#9733;</span>
-                        {% endif %}
-                    {% endfor %}
-                  </div>
-                {% else %}
-                <p>This product has no rating yet<p>
-                {% endif %}
-              
-              </div>
+      
+      {% if related_products %}
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h2 class="module-title font-alt">Related Products</h2>
           </div>
         </div>
-        {% endfor %}
+        
+        <div class="row multi-columns-row">
 
-      </div>
+          {% for rel_product in related_products %}
+          <div class="col-sm-6 col-md-3 col-lg-3">
+            <div class="shop-item pointer" onclick="window.location.href='{{ rel_product.get_absolute_url }}'">
+              <div class="shop-item-image">
+                  <img src="{{ rel_product.images.first.image.url }}" alt="{{ rel_product.name }}"/>
+              </div>
+              <h4 class="shop-item-title font-alt">{{ rel_product.name }}</h4>
+                {% if rel_product.is_sale %}
+                  <strike>₹ {{ rel_product.price|floatformat:2|intcomma }}</strike>
+                  &nbsp; ₹ {{ rel_product.sale_price|floatformat:2|intcomma }}
+                {% else %}
+                  ₹ {{ rel_product.price|floatformat:2|intcomma }}
+                {% endif %}
+
+                <div class="row">
+                  
+                  {% if rel_product.get_average_rating != '0' %}
+                    <div class="star-rating">
+                      {% for i in "12345"|slice:":" %}
+                          {% if rel_product.get_average_rating >= i %}
+                              <span class="full">&#9733;</span>
+                          {% elif rel_product.get_average_rating >= i|add:"-0.5" %}
+                              <span class="half">&#9733;</span>
+                          {% else %}
+                              <span class="empty">&#9733;</span>
+                          {% endif %}
+                      {% endfor %}
+                    </div>
+                  {% else %}
+                  <p>This product has no rating yet<p>
+                  {% endif %}
+                
+                </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      {% endif %}
+
     </div>
 </section>

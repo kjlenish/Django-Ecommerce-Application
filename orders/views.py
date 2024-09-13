@@ -76,3 +76,11 @@ def view_orders(request):
     context = {'orders': orders}
     
     return render(request, 'orders/orders.html', context)
+
+
+@login_required
+def order_details(request, pk):
+    order = Order.objects.get(id=pk)
+    context = {'order': order}
+    
+    return render(request, 'orders/order_details.html', context)

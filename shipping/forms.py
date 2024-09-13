@@ -7,7 +7,7 @@ class CustomerAddressForm(forms.ModelForm):
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 1"}
         ),
     )
-    address_line2 = forms.CharField(label="", required=False, help_text="Enter your Address Line 2",
+    address_line2 = forms.CharField(label="", required=True, help_text="Enter your Address Line 2",
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 2"}
         ),
     )
@@ -15,7 +15,7 @@ class CustomerAddressForm(forms.ModelForm):
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Landmark"}
         ),
     )
-    city = forms.CharField(label="", required=False, help_text="Enter your City",
+    city = forms.CharField(label="", required=True, help_text="Enter your City",
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "City"}
         ),
     )
@@ -63,7 +63,7 @@ class UpdateCustomerAddressForm(forms.ModelForm):
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 1"}
         ),
     )
-    address_line2 = forms.CharField(label="", required=False, help_text="Enter your Address Line 2",
+    address_line2 = forms.CharField(label="", required=True, help_text="Enter your Address Line 2",
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 2"}
         ),
     )
@@ -71,7 +71,7 @@ class UpdateCustomerAddressForm(forms.ModelForm):
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Landmark"}
         ),
     )
-    city = forms.CharField(label="", required=False, help_text="Enter your City",
+    city = forms.CharField(label="", required=True, help_text="Enter your City",
             widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "City"}
         ),
     )

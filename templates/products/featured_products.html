@@ -17,9 +17,9 @@
                     <div class="owl-item">
                         <div class="col-sm-12">
                             <div class="ex-product">
-                                <a href="{% url 'product' product.id %}"><img src="{{ product.images.first.image.url }}" alt="{{ product.name }}"/></a>
+                                <a href="{{ product.get_absolute_url }}"><img src="{{ product.images.first.image.url }}" alt="{{ product.name }}"/></a>
                                 <h4 class="shop-item-title font-alt">
-                                    <a href="{% url 'product' product.id %}">{{ product.name }}</a>
+                                    <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
                                 </h4>
                                 {% if product.is_sale %}
                                     <strike>₹ {{ product.price|floatformat:2|intcomma }}</strike>

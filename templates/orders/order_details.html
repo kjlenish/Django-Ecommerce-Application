@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Order Details</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+    <section class="module order_body">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="row">
+                        <h3 class="cus-header">Shipping Address</h3>
+                    </div>
+                    <div class="row">
+                        <h5><strong>{{ order.shipping_address.first_name }} {{ order.shipping_address.last_name }}<strong><h5>
+                    </div>
+                    <div class="row">
+                        <h5>{{ order.shipping_address.address_line1 }}, {{ order.shipping_address.address_line2 }},<h5>
+                    </div>
+                    <div class="row">
+                        <h5>{{ order.shipping_address.city }} - {{ order.shipping_address.zip_code }}, {{ order.shipping_address.state }}, {{ order.shipping_address.country }}<h5>
+                    </div>
+                    <div class="row">
+                        <h5>Phone number: {{ order.shipping_address.country_code }} {{ order.shipping_address.phone }}<h5>
+                    </div>
+                    <div class="row">
+                        <h5>E-mail: {{ order.shipping_address.email }}<h5>
+                    </div>
+                </div>
+                
+                {% if order.payment.payment_status == 'Payment Received' %}
+                    <div class="col-sm-4">
+                        <div class="row">
+                            <h3 class="cus-header">Billing Address</h3>
+                        </div>
+                        <div class="row">
+                            <h5><strong>{{ order.payment.billing_address.first_name }} {{ order.payment.billing_address.last_name }}<strong><h5>
+                        </div>
+                        <div class="row">
+                            <h5>{{ order.payment.billing_address.address_line1 }}, {{ order.payment.billing_address.address_line2 }},<h5>
+                        </div>
+                        <div class="row">
+                            <h5>{{ order.payment.billing_address.city }} - {{ order.payment.billing_address.zip_code }}, {{ order.payment.billing_address.state }}, {{ order.payment.billing_address.country }}<h5>
+                        </div>
+                        <div class="row">
+                            <h5>Phone number: {{ order.payment.billing_address.country_code }} {{ order.payment.billing_address.phone }}<h5>
+                        </div>
+                        <div class="row">
+                            <h5>E-mail: {{ order.payment.billing_address.email }}<h5>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="col-sm-4">
+                    <div class="row">
+                        <h3 class="cus-header">Order Details</h3>
+                    </div>
+                    <div class="row">
+                        <h5>{{ order.order_status }}</h5>
+                    </div>
+                    <div class="row">
+                        <h5>Bill amount: {{ order.order_amount}}</h5>
+                    </div>
+                                        
+                    {% if order.date_shipped %}
+                        <div class="row">
+                            <h5>Shipping date: {{ order.date_shipped.date }}</h5>
+                        </div>
+                    {% endif %}
+
+                    {% if order.date_delivered %}
+                        <div class="row">
+                            <h5>Delivery date: {{ order.date_delivered.date }}</h5>
+                        </div>
+                    {% endif %}
+
+                    {% if order.date_cancelled %}
+                        <div class="row">
+                            <h5>Cancellation date: {{ order.date_cancelled.date }}</h5>
+                        </div>
+                    {% endif %}
+
+                    {% if order.payment.payment_status %}
+                        <div class="row">
+                            <h5>{{ order.payment.payment_status }} 
+                                {% if order.payment.payment_status == "Payment Received" %}
+                                    via {{ order.payment.payment_method }}
+                                {% endif %}
+                            </h5>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <br><br>
+            
+            <div class="row">
+                <div class="row">
+                    <h3 class="cus-header">Items in this Order</h3>
+                </div>
+
+                <br>
+
+                {% for order_item in order.items.all %}
+                    <div class="cart-item btn-pad">
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="cart-item-details pointer" onclick="window.location.href='{{ order_item.product.get_absolute_url }}'">
+                                        <img src="{{ order_item.product.images.first.image.url }}" alt="{{ order_item.product.name }}" class="cart-item-image"/>
+                                        <div class="row">
+                                            <div class="cart-item-info centered-text">
+                                                <h3>{{ order_item.product.name }}</h3>                                    
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+        
+                                <div class="row">
+                                    <div>
+                                        <div class="row">
+                                            <div class="cart-item-info centered-text col-sm-3">
+                                                <h5>Quantity: {{ order_item.quantity }}</h5>                                    </div>
+        
+                                            <div class="cart-item-info centered-text col-sm-3">
+                                                <h5>Price: {{ order_item.price }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="cart-item-info">
+                                        <div class="col-sm-6 cus-header">
+                                            <h4>Total: {{ order_item.get_item_price }}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        
+
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

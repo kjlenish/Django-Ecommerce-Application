@@ -25,17 +25,17 @@
             </div>
           </div>
           <div class="row mb-20">
-            <div class="col-sm-12 centered-text">
+            <div class="col-sm-12">
               <div class="price font-alt"><span class="amount">
                 {% if product.is_sale %}
-                <strike>₹ {{ product.price|floatformat:2|intcomma }}</strike>
-                &nbsp; ₹ {{ product.sale_price|floatformat:2|intcomma }}
+                ₹ <strike>{{ product.price|floatformat:2|intcomma }}</strike>
+                &nbsp; {{ product.sale_price|floatformat:2|intcomma }}
                 {% else %}
                   ₹ {{ product.price|floatformat:2|intcomma }}
                 {% endif %}
               </span></div>
 
-              <div class="row">
+              <div class="row centered-text">
                 
                 {% if product.get_average_rating != '0' %}
                 Average rating: <span>

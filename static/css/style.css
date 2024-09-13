@@ -3154,16 +3154,28 @@ tbody tr:last-child td {
 }
 
 .order_body {
-  background-color: #B9D9EB;
+  background-color: #E1EBEE;
 }
 .order_set {
   padding: 2rem;
   padding-left: 5rem;
   background-color: white;
   margin:2rem;
+  cursor: pointer;
 }
 
 .btn-pad {
   padding: 1rem;
   margin: 1rem;
+}
+
+.cus-header {
+  font-family: "Roboto Condensed", sans-serif;
+  letter-spacing: 1px;
+  font-weight: 200;
+  color: #111;
+}
+
+.pointer {
+  cursor: pointer;
 }

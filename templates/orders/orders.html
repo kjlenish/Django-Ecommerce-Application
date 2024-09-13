@@ -25,7 +25,7 @@
 
                         {% for order in orders %}
 
-                            <div class="row order_set">
+                            <div class="row order_set pointer" onclick="window.location.href='{{ order.get_absolute_url }}'">
                                 <div class="col-sm-7">
                             
                                     {% for order_item in order.items.all %}
