@@ -70,7 +70,7 @@
                         <div class="row">
                             <div class="col-sm-3"></div>
                             <div class="col-sm-6">
-                                <a href="#"><button class="place-order-btn">CONTINUE TO PAYMENT</button></a>
+                                <button id="rzp-button1" class="place-order-btn">CONTINUE TO PAYMENT</button>
                             </div>
                             <div    lass="col-sm-3"></div>
                         </div>
@@ -120,5 +120,39 @@
             </div>
         </div>
     </section>
+
+
+    {% if order.razorpay_order_id %}
+
+        <form class="form" method="POST">
+            <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+            <script>
+                var options = {
+                    "key": "{{ razorpay_key_id }}",
+                    "amount": "{{ amount|safe }}",
+                    "currency": "INR",
+                    "name": "shoppers Dest",
+                    "order_id": "{{ order.razorpay_order_id }}",
+                    "callback_url": "{% url 'order_summary' order.id %}",
+                    "remember_customer": "true",
+                    "prefill": {
+                        "name": "{{ order.customer.first_name }} {{ order.customer.last_name }}",
+                        "email": "{{ order.customer.email }}",
+                        "contact": "{{ order.customer.customer_profile.phone }}"
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                };
+                var rzp1 = new Razorpay(options);
+                document.getElementById('rzp-button1').onclick = function(e){
+                    rzp1.open();
+                    e.preventDefault();
+                }
+                </script>
+
+            <input type="hidden" custom="Hidden Element" name="hidden">
+        </form>
+    {% endif %}
 
 {% endblock content %}

@@ -8,6 +8,7 @@ from shipping.models import Address
 
 class Order(models.Model):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    razorpay_order_id = models.CharField(max_length=254, blank=True, null=True)
     
     status_choices = [
         ('In Cart', 'In Cart'),

@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.conf import settings
 from cart.cart import Cart
 from django.contrib.auth.models import User
 from .models import Order, OrderItem
 from products.models import Product
 from shipping.models import Address
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from payments.views import initialize_payment, get_payment_status
+import razorpay
+import math
 
 # Create your views here.
 
@@ -27,7 +33,8 @@ def place_order(request):
         
         order.shipping_address = address
         order.save()
-        return order_summary(request, order)
+        
+        return process_order(request, order.id)
     
 
     for product_id, attribute in cart.cart.items():
@@ -47,8 +54,6 @@ def place_order(request):
     for order_item in order_items:
         order_item.delete()
     
-    
-    
     try:
         default_address = Address.objects.get(user=user, is_default=True)
     except Address.DoesNotExist:
@@ -58,15 +63,72 @@ def place_order(request):
     context = {'order': order, 'default_address': default_address , 'addresses': addresses}
     
     return render(request, 'orders/delivery_details.html', context)
-        
+ 
+ 
+def round_up_amount(amount):
+    rounded_amount = math.ceil(amount) * 100
+
+    if rounded_amount % 10 != 0:
+        rounded_amount = ((rounded_amount // 10) + 1) * 10
+
+    return rounded_amount
+       
 
 @login_required 
-def order_summary(request, order):
+@csrf_exempt
+def process_order(request, order_id):
+    order = Order.objects.get(id=order_id)
     order_items = OrderItem.objects.filter(order=order)
-    context = {'order_items': order_items}
+    client = razorpay.Client(auth=(settings.RAZORPAY_ID_KEY, settings.RAZORPAY_SECRET_KEY))
+    
+    # amount = round_up_amount(order.order_amount)
+    amount=1000
+
+    data = {"amount": amount, "currency": "INR"}
+    razor_payment = client.order.create(data=data)
+    
+    if razor_payment['status'] == 'created':
+        order.razorpay_order_id = razor_payment['id']
+        order.save()
+          
+        initialize_payment(order, razor_payment)
+
+    else:
+        messages.warning(request, "Payment gateway down... Please try again !!")
+        return redirect('cart')
+
+    
+    context = {'order': order, 'order_items': order_items, 'razorpay_key_id': "rzp_test_WxvzJkGzEAmBGF", 
+               'amount': amount}
     
     return render(request, 'orders/order_summary.html', context)
+
+
+@login_required
+@csrf_exempt
+def order_summary(request, order_id):
+    order = Order.objects.get(id=order_id)
+    client = razorpay.Client(auth=(settings.RAZORPAY_ID_KEY, settings.RAZORPAY_SECRET_KEY))
     
+    if request.method == 'POST':
+        response = request.POST
+        payment_success = get_payment_status(order.payment.id, response, client)
+        
+        if payment_success:
+            order.order_status = 'Order Confirmed'
+            order.save()          
+            
+            cart = Cart(request)
+            cart.clear()
+
+            messages.success(request, "Your order has been confirmed")
+            return redirect('all_orders')
+        
+        
+        
+    messages.warning(request, "Payment failed... Try again")
+    return redirect('cart')    
+        
 
 @login_required
 def view_orders(request):

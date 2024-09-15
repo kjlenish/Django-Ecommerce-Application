@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_ru#kbo#01^3fuck2v#ph_hx5v(-xnsz%smervc^aj2!u(#k7b'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,6 +129,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
@@ -153,3 +155,6 @@ CRISPY_ALLOWED_TEMPLATE_PACK = 'bootstrap5'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CART_SESSION_ID = 'cart'
+
+RAZORPAY_ID_KEY = os.getenv('RAZORPAY_KEY_ID')
+RAZORPAY_SECRET_KEY = os.getenv('RAZORPAY_SECRET_KEY')

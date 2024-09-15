@@ -42,7 +42,7 @@ def add_to_cart(request, product_id):
         product = get_object_or_404(Product, id=product_id)
         cart.update(product)
         
-        return redirect('product', pk=product_id)
+        return redirect(product.get_absolute_url())
     
     except Exception as e:
         return render(request, 'lost.html')

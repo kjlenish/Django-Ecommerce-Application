@@ -7,7 +7,7 @@ from .forms import ProductReviewForm
 # Create your views here.
 
 def add_review(request, pk):
-    user = User.objects.get(id=request.user.id)
+    user = User.objects.get(username=request.user)
     product = Product.objects.get(id=pk)
     
     try:
