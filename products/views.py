@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from .models import Category, Product
 from reviews.models import Review
 
@@ -12,6 +13,21 @@ def home_view(request):
         context = {"featured_products": featured_products, "new_arrivals": new_arrivals}
         
         return render(request, 'products/home.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+
+
+def search(request):
+    try:
+        if request.GET:
+            search_element = request.GET.get('search_element')
+            
+            products = Product.objects.filter(Q(name__icontains=search_element) | Q(category__name__icontains=search_element) | Q(description__icontains=search_element))
+                    
+            context = {'products': products}
+        
+        return render(request, 'products/products.html', context)
     
     except Exception as e:
         return render(request, 'lost.html')

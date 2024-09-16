@@ -9,8 +9,6 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
-from django.db.models import Q
-from products.models import Product
 from cart.cart import Cart
 
 # Create your views here.
@@ -261,21 +259,6 @@ def update_user_password(request, username):
             user_form = UpdatePasswordForm(user)
             context = {"user_form": user_form}
         return render(request, 'accounts/update_password.html', context)
-    
-    except Exception as e:
-        return render(request, 'lost.html')
-    
-
-def search(request):
-    try:
-        if request.GET:
-            search_element = request.GET.get('search_element')
-            
-            products = Product.objects.filter(Q(name__icontains=search_element) | Q(category__name__icontains=search_element) | Q(description__icontains=search_element))
-                    
-            context = {'products': products}
-        
-        return render(request, 'products/products.html', context)
     
     except Exception as e:
         return render(request, 'lost.html')

@@ -9,59 +9,74 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def add_address(request):
-    user = User.objects.get(username=request.user)
-    
-    if request.method == "POST":
-            address_form = UpdateCustomerAddressForm(request.POST)
-
-            if address_form.is_valid():
-                address = address_form.save(commit=False)
-                address.user = user
-                address.save()
-                messages.success(request, "Successfully added new address")
-                return redirect('check_out')
-            else:
-                messages.warning(request, "Failed to add address !!")
-    else:
-        address_form = UpdateCustomerAddressForm()
+    try:
+        user = User.objects.get(username=request.user)
         
-    context = {'address_form':address_form}
-    return render(request, 'shipping/add_address.html', context)
+        if request.method == "POST":
+                address_form = UpdateCustomerAddressForm(request.POST)
+
+                if address_form.is_valid():
+                    address = address_form.save(commit=False)
+                    address.user = user
+                    address.save()
+                    messages.success(request, "Successfully added new address")
+                    return redirect('check_out')
+                else:
+                    messages.warning(request, "Failed to add address !!")
+        else:
+            address_form = UpdateCustomerAddressForm()
+            
+        context = {'address_form':address_form}
+        return render(request, 'shipping/add_address.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
 
 
 @login_required
 def manage_addresses(request):
-    user = User.objects.get(username=request.user)
-    addresses = Address.objects.filter(user=user)
+    try:
+        user = User.objects.get(username=request.user)
+        addresses = Address.objects.filter(user=user)
+        
+        context = {'addresses': addresses}
+        
+        return render(request, 'shipping/addresses.html', context)
     
-    context = {'addresses': addresses}
-    
-    return render(request, 'shipping/addresses.html', context)
+    except Exception as e:
+        return render(request, 'lost.html')
 
 
 @login_required
 def update_address(request, id):
-    address = Address.objects.get(user=request.user, id=id)
-    address_form = UpdateCustomerAddressForm(request.POST or None, instance=address)
-            
-    context = {
-        'address_form':address_form
-    }
-    
-    if request.POST:
-        if address_form.is_valid():
-            address_form.save()
-            messages.success(request, "Your Address has been updated")
-            return redirect('manage_addresses')
-        else:
-            messages.warning(request, "Invalid details... Please try again !!")
+    try:
+        address = Address.objects.get(user=request.user, id=id)
+        address_form = UpdateCustomerAddressForm(request.POST or None, instance=address)
+                
+        context = {
+            'address_form':address_form
+        }
         
-    return render(request, 'shipping/update_address.html', context)
+        if request.POST:
+            if address_form.is_valid():
+                address_form.save()
+                messages.success(request, "Your Address has been updated")
+                return redirect('manage_addresses')
+            else:
+                messages.warning(request, "Invalid details... Please try again !!")
+            
+        return render(request, 'shipping/update_address.html', context)
 
+    except Exception as e:
+        return render(request, 'lost.html')
 
 @login_required
 def remove_address(request, id):
-    address = Address.objects.get(user=request.user, id=id)
-    address.delete()
-    messages.success(request, "Your Address has been removed")
-    return redirect('manage_addresses')
+    try:
+        address = Address.objects.get(user=request.user, id=id)
+        address.delete()
+        messages.success(request, "Your Address has been removed")
+        return redirect('manage_addresses')
+    
+    except Exception as e:
+        return render(request, 'lost.html')
