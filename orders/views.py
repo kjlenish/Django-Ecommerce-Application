@@ -98,7 +98,7 @@ def process_order(request, order_id):
         return redirect('cart')
 
     
-    context = {'order': order, 'order_items': order_items, 'razorpay_key_id': "rzp_test_WxvzJkGzEAmBGF", 
+    context = {'order': order, 'order_items': order_items, 'razorpay_key_id': settings.RAZORPAY_ID_KEY, 
                'amount': amount}
     
     return render(request, 'orders/order_summary.html', context)
