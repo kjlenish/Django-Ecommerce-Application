@@ -162,5 +162,3 @@ cython_debug/
 .vscode
 !static/lib/*
 /media
-/*/migrations/*
-!/*/migrations/__init__.py
