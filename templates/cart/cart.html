@@ -49,7 +49,7 @@
                                         </div>
                                     </div>
 
-
+                                    
                                     <form class="form" method="POST" id="quantity-form">
                                         {% csrf_token %}
                                         <div class="cart-item-actions">
@@ -70,15 +70,11 @@
                                             </div>
                                             
                                             <div class="row">
-                                                <div class="col-sm-1"></div>
-                                                <div class="form-group col-sm-4">
-                                                    <button type="submit" name="action" value="update" class="btn btn-primary btn-circle btn-block">UPDATE</button>
+                                                <div class="col-sm-3"></div>
+                                                <div class="form-group col-sm-6">
+                                                    <button type="button" data-product-id="{{ item.product.id }}" class="remove-btn btn btn-danger btn-circle btn-block">REMOVE</button>
                                                 </div>
-                                                <div class="col-sm-2"></div>
-                                                <div class="form-group col-sm-4">
-                                                    <button type="submit" name="action" value="remove"class="btn btn-danger btn-circle btn-block">REMOVE</button>
-                                                </div>
-                                                <div class="col-sm-1"></div>
+                                                <div class="col-sm-3"></div>
                                             </div>
 
                                         </div>
@@ -96,16 +92,16 @@
                     <div class="col-sm-1"></div>
                     
                     <div class="col-sm-4">
-                        <div class="row">
+                        <div class="row" id="price-details">
                             <h3>PRICE DETAILS</h3>
                             <table>
                                 <tr>
-                                    <td>Price ({{ cart|length }} items)</td>
-                                    <td>₹{{ cart.get_total_price }}</td>
+                                    <td id="cart-length">Price ({{ cart|length }} items)</td>
+                                    <td id="total-price">₹{{ cart.get_total_price }}</td>
                                 </tr>
                                 <tr>
                                     <td>Discount</td>
-                                    <td>- ₹{{ cart.get_total_discount }}</td>
+                                    <td id="total-discount">- ₹{{ cart.get_total_discount }}</td>
                                 </tr>
                                 {% comment %} <tr>
                                     <td>Coupons for you</td>
@@ -113,7 +109,7 @@
                                 </tr> {% endcomment %}
                                 <tr>
                                     <td>Delivery Charges</td>
-                                    <td>
+                                    <td id="delivery-charges">
                                         {% if cart.get_discounted_price > 1500 %}
                                             <strike>₹ {{ cart.get_delivery_charge|floatformat:2|intcomma }}</strike>
                                             &nbsp; FREE
@@ -124,17 +120,18 @@
                                 </tr>
                                 <tr class="total-amount">
                                     <td>Total Amount</td>
-                                    <td>₹{{ cart.get_final_price }}</td>
+                                    <td id="final-amount">₹{{ cart.get_final_price }}</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
+                                    <td colspan="2" class="savings">You will save ₹<span id="total-savings">{{ cart.get_total_savings }}</span> on this order</td>
                                 </tr>
                             </table>
-                            <a href="{% url 'check_out'%}"><button class="place-order-btn">PLACE ORDER</button></a>
+                            <a href="{% url 'check_out' %}"><button class="place-order-btn">PLACE ORDER</button></a>
                             <div class="safe-payments">
                                 <p>Safe and Secure Payments. Easy returns. 100% Authentic products.</p>
                             </div>
                         </div>
+                        
 
 
                     </div>
@@ -154,7 +151,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             const plusButtons = document.querySelectorAll('.plus-btn');
             const minusButtons = document.querySelectorAll('.minus-btn');
-        
+            const removeButtons = document.querySelectorAll('.remove-btn');
+
             plusButtons.forEach(button => {
                 button.addEventListener('click', function () {
                     const productId = this.getAttribute('data-product-id');
@@ -163,7 +161,7 @@
                     const maxQuantity = parseInt(quantityInput.getAttribute('data-max'));
         
                     if (currentQuantity < maxQuantity) {
-                        quantityInput.value = currentQuantity + 1;
+                        updateCart(productId, currentQuantity + 1, 'update');
                     }
                 });
             });
@@ -176,10 +174,69 @@
                     const minQuantity = parseInt(quantityInput.getAttribute('data-min'));
         
                     if (currentQuantity > minQuantity) {
-                        quantityInput.value = currentQuantity - 1;
+                        updateCart(productId, currentQuantity - 1, 'update');
                     }
                 });
             });
+
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.getAttribute('data-product-id');
+                    updateCart(productId, 0, 'remove');
+                });
+            });
+
+            function updateCart(productId, newQuantity, action) {
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+                fetch("{% url 'update_cart' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        product_id: productId,
+                        item_quantity: newQuantity,
+                        action: action
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (action === 'remove') {
+                            const itemElement = document.querySelector(`[data-product-id="${productId}"]`).closest('.cart-item');
+                            itemElement.remove();
+            
+                            const cartItems = document.querySelectorAll('.cart-item');
+                            if (cartItems.length === 0) {
+                                window.location.reload();
+                            }
+                        } else {
+                            document.getElementById('quantity-input-' + productId).value = newQuantity;
+                        }
+                        
+
+                        document.getElementById('cart-length').innerText = `Price (${data.cart_length} items)`;
+                        document.getElementById('cart-length-nav').innerText = `${data.cart_length}`;
+                        document.getElementById('total-price').innerText = `₹${data.total_price}`;
+                        document.getElementById('total-discount').innerText = `- ₹${data.total_discount}`;
+                        const deliveryChargeElement = document.getElementById('delivery-charges');
+                            if (data.is_free_delivery) {
+                                deliveryChargeElement.innerHTML = `<strike>₹ ${data.delivery_charge.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</strike>&nbsp; FREE`;
+                            } else {
+                                deliveryChargeElement.innerText = `₹ ${data.delivery_charge.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                            }
+                        document.getElementById('final-amount').innerText = `₹${data.final_price}`;
+                        document.getElementById('total-savings').innerText = `₹${data.total_savings}`;
+                        
+                    } else {
+                        console.error('Error updating cart');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+            
         });
         
     </script>
