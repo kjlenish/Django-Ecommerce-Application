@@ -158,3 +158,14 @@ CART_SESSION_ID = 'cart'
 
 RAZORPAY_ID_KEY = os.getenv('RAZORPAY_KEY_ID')
 RAZORPAY_SECRET_KEY = os.getenv('RAZORPAY_SECRET_KEY')
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_ID')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
