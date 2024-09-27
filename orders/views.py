@@ -51,9 +51,9 @@ def place_order(request):
         order.save()
         
         cart_products = [product_id for product_id in cart.cart.keys()]
-        order_items = OrderItem.objects.filter(order=order).exclude(product__id__in=cart_products)
-        for order_item in order_items:
-            order_item.delete()
+        items_not_in_cart = OrderItem.objects.filter(order=order).exclude(product__id__in=cart_products)
+        for item in items_not_in_cart:
+            item.delete()
         
         try:
             default_address = Address.objects.get(user=user, is_default=True)
@@ -127,6 +127,11 @@ def order_summary(request, order_id):
                 cart = Cart(request)
                 cart.clear()
 
+                order_items = OrderItem.objects.filter(order=order)
+                for item in order_items:
+                    product = Product.objects.get(id=item.product.id)
+                    product.update_stock_on_order(item.quantity, order.order_status)
+                
                 messages.success(request, "Your order has been confirmed")
                 return redirect('all_orders')
             
@@ -143,7 +148,7 @@ def order_summary(request, order_id):
 def view_orders(request):
     try:
         user = User.objects.get(username=request.user)
-        orders = Order.objects.filter(customer=user).exclude(order_status='In Cart')
+        orders = Order.objects.filter(customer=user).exclude(order_status='In Cart').order_by('-date_updated')
         
         context = {'orders': orders}
         
@@ -160,6 +165,25 @@ def order_details(request, pk):
         context = {'order': order}
         
         return render(request, 'orders/order_details.html', context)
+    
+    except Exception as e:
+        return render(request, 'lost.html')
+
+
+@login_required
+def order_cancel(request, order_id):
+    try:
+        order = Order.objects.get(id=order_id)
+        
+        if request.method == "POST":
+            order.cancellation_reason = request.POST.get('reason')
+            order.order_status = 'Order Cancelled'
+            order.save()
+            
+            messages.success(request, "Your Order has been Cancelled")
+            return redirect('all_orders')
+        
+        return render(request, 'orders/order_cancel.html')
     
     except Exception as e:
         return render(request, 'lost.html')

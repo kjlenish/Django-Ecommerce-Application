@@ -160,6 +160,17 @@
                 {% endfor %}
 
             </div>
+
+            {% if order.order_status == "Order Confirmed" %}
+                <div class="row btn-pad">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-6">
+                        <a class="btn btn-danger btn-circle btn-block" href="{% url 'cancel_order' order.id %}"> CANCEL ORDER </a>
+                    </div>
+                    <div class="col-sm-3"></div>
+                </div>
+            {% endif %}
+            
         </div>
     </section>
 

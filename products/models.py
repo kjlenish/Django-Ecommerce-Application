@@ -82,6 +82,14 @@ class Product(models.Model):
             avg_rating = 0
         
         return str(avg_rating)
+    
+    def update_stock_on_order(self, quantity, action):
+        if action == 'Order Confirmed':
+            self.stock = self.stock - quantity
+        elif action == 'Order Cancelled':
+            self.stock = self.stock + quantity
+            
+        self.save()
 
 
 class ProductImage(models.Model):

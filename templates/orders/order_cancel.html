@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Cancel Order</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+  <section class="module">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-sm-4"></div>
+
+          <div class="col-sm-4 text-center">
+            <h4 class="font-alt">Cancel Order</h4>
+            <hr class="divider-w mb-10">
+
+            <form class="form" method="POST">
+              {% csrf_token %}
+
+              <div class="form-group">
+                <label for="cancellationReason">Cancellation Reason</label>
+                <textarea class="form-control" id="cancellationReason" name="reason" rows="3"></textarea>
+              </div>
+
+              <div class="form-group">
+                <button class="btn btn-round btn-danger" type="submit">Confirm Cancel</button>
+              </div>
+
+            </form>
+
+          </div>
+
+          <div class="col-sm-4"></div>
+
+        </div>
+      </div>
+  </section>
+
+{% endblock content %}

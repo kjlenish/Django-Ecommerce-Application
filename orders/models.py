@@ -25,7 +25,10 @@ class Order(models.Model):
     
     shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True)
     date_shipped = models.DateTimeField(null=True, blank=True)
+    
     date_delivered = models.DateTimeField(null=True, blank=True)        
+    
+    cancellation_reason = models.CharField(max_length=500, blank=True, null=True)
     date_cancelled = models.DateTimeField(null=True, blank=True)        
     
     date_created = models.DateTimeField(auto_now_add=True)
