@@ -38,3 +38,11 @@ def get_payment_status(payment_id, response, client):
         return True
     else:
         return False
+
+
+def get_payment_details(payment_id):
+    payment = Payment.objects.get(id=payment_id)
+    if payment.payment_status == 'Payment Received':
+        return payment
+    else:
+        return None

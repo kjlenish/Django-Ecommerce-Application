@@ -8,7 +8,7 @@ from products.models import Product
 from shipping.models import Address
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from payments.views import initialize_payment, get_payment_status
+from payments.views import initialize_payment, get_payment_status, get_payment_details
 import razorpay
 import math
 
@@ -181,6 +181,28 @@ def order_cancel(request, order_id):
             order.save()
             
             messages.success(request, "Your Order has been Cancelled")
+            
+            payment = get_payment_details(order.payment.id)
+            if payment:
+                client = razorpay.Client(auth=(settings.RAZORPAY_ID_KEY, settings.RAZORPAY_SECRET_KEY))
+            
+                response = client.payment.refund(payment.razorpay_payment_id,{
+                            "amount": str(payment.billing_amount),
+                            "speed": "optimum",
+                            "notes": {
+                                "notes_key_1": str(order),
+                                "notes_key_2": str(order.razorpay_order_id)
+                            },
+                            "receipt": f"Receipt for {order.razorpay_order_id}"
+                            })
+                
+                if 'error' in response:
+                    messages.error(request, "Failed to process refund. Contact the customer care.")
+                else:
+                    payment.payment_status = 'Refund Initiated'
+                    payment.save()
+                    messages.success(request, "Refund is being processed. The refund will take 5-7 working days")      
+            
             return redirect('all_orders')
         
         return render(request, 'orders/order_cancel.html')

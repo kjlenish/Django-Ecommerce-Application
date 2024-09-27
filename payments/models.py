@@ -23,7 +23,9 @@ class Payment(models.Model):
     payment_status_choices = [
         ('Payment Initiated', 'Payment Initiated'),
         ('Payment Not Received', 'Payment Not Received'),
-        ('Payment Received', 'Payment Received')
+        ('Payment Received', 'Payment Received'),
+        ('Refund Initiated', 'Refund Initiated'),
+        ('Refund Received', 'Refund Received')
     ]
     payment_status = models.CharField(max_length=254, choices=payment_status_choices, blank=True, null=True, default='Payment Not Initiated')
         
