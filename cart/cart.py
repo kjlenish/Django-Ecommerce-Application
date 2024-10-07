@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from products.models import Product
 from django.contrib import messages
+from coupons.models import Coupon
 
 class Cart:
     
@@ -48,7 +49,6 @@ class Cart:
             self.cart[product_id]['quantity'] = 1
             messages.warning(self.request, "Minimum one quantity required")
         
-        print(self.cart)
         self.save()
 
 
@@ -70,6 +70,9 @@ class Cart:
             
             total_price += item_price
         
+        if total_price < 0:
+            total_price = 0
+        
         return total_price
     
     def get_total_discount(self):
@@ -85,7 +88,31 @@ class Cart:
                 discount = price_diff * quantity
                 total_discount += discount
         
+        if total_discount < 0:
+            total_discount = 0
+        
         return round(total_discount, 2)
+    
+    def get_coupon_discount(self):
+        coupon_discount = 0
+        coupon_id = self.session.get('coupon_id')
+        final_price = Decimal(self.get_final_price())       
+
+        if coupon_id:
+            coupon = Coupon.objects.get(id=coupon_id)
+            if coupon.is_valid()[0]:
+                
+                if coupon.discount_type == "Percentage":
+                    discount = Decimal(coupon.discount / 100) * final_price
+                else:
+                    discount = coupon.discount
+                
+                coupon_discount += discount
+                
+        if coupon_discount < 0:
+            coupon_discount = 0
+        
+        return round(coupon_discount, 2)
     
     def get_delivery_charge(self):
         delivery_charge = 0
@@ -95,12 +122,15 @@ class Cart:
         for product in products:
             delivery_charge += product.delivery_charge
         
-        return delivery_charge
+        return round(delivery_charge, 2)
     
     def get_discounted_price(self):
         total_price = self.get_total_price()
         total_discount = self.get_total_discount()
         discounted_price = total_price - total_discount
+        
+        if discounted_price < 0:
+            discounted_price = 0
         
         return round(discounted_price, 2)
         
@@ -112,16 +142,37 @@ class Cart:
             delivery_charges = self.get_delivery_charge()
             final_price += delivery_charges
         
+        if final_price < 0:
+            final_price = 0
+        
         return round(final_price, 2)
     
     def get_total_savings(self):
-        total_savings = self.get_total_discount()
-        final_price = self.get_final_price()
+        total_savings = Decimal(self.get_total_discount())
+        total_coupon_discount = Decimal(self.get_coupon_discount())
+        final_price = Decimal(self.get_final_price())
+        
+        total_savings += total_coupon_discount
+        
         if final_price > 1500:
-            delivery_charges = self.get_delivery_charge()
+            delivery_charges = Decimal(self.get_delivery_charge())
             total_savings += delivery_charges
+            
+        if total_savings < 0:
+            total_savings = 0
         
         return round(total_savings, 2)
+    
+    def get_final_price_after_coupon(self):
+        final_price = Decimal(self.get_final_price())
+        coupon_discount = Decimal(self.get_coupon_discount())
+        
+        final_price -= coupon_discount
+        
+        if final_price < 0:
+            final_price = 0
+        
+        return round(final_price, 2)
     
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

@@ -3124,7 +3124,7 @@ tbody tr:last-child td {
 }
 
 .savings {
-  color: green;
+  color: rgb(2, 201, 2);
   text-align: center;
   margin-top: 20px;
 }

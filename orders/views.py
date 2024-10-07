@@ -21,7 +21,7 @@ def place_order(request):
         user = User.objects.get(username=request.user)
         
         order, created = Order.objects.get_or_create(customer=user, order_status='In Cart')
-        order.order_amount = cart.get_final_price()
+        order.order_amount = cart.get_final_price_after_coupon()
         
         if request.POST:
             address_id = request.POST.get('address_id')

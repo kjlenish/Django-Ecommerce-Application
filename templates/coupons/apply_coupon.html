@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block banner %}
+  <section class="module bg-dark-30" data-background="{% static 'images/banner.jpg' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6 col-sm-offset-3">
+            <h1 class="module-title font-alt mb-0">Apply Coupon</h1>
+          </div>
+        </div>
+      </div>
+  </section>
+{% endblock banner %}
+
+
+{% block content %}
+  <section class="module">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-sm-4"></div>
+
+          <div class="col-sm-4 text-center">
+            <h4 class="font-alt">Apply Coupon</h4>
+            <hr class="divider-w mb-10">
+
+            {% if not coupon %}
+
+                <form class="form" method="POST">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <input type="text" class="form-control" name="code" placeholder="Enter your coupon code">
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-round btn-primary" type="submit">Apply Coupon</button>
+                </div>
+
+                </form>
+            
+            {% else %}
+
+                <h3>You have already applied the coupon <span class="savings">{{ coupon.code }}</span></h4>
+                <h5>Click <a href="{% url 'remove_coupon' %}">here</a> to remove</h5>
+                            
+            {% endif %}
+
+          </div>
+
+          <div class="col-sm-4"></div>
+
+        </div>
+      </div>
+  </section>
+
+{% endblock content %}

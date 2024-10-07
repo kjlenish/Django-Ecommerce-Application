@@ -23,7 +23,7 @@
                 {% if order %}
                     <div class="col-sm-7">
                         <div class="row">
-                            <form class="form" method="POST">
+                            <form class="form" id="addressForm" method="POST">
                                 {% csrf_token %}
                                 <h3>Choose the delivery address</h3><br>
                                 {% if default_address %}
@@ -84,14 +84,6 @@
                             </form>
 
                             <div class="row">
-                                <div class="col-sm-3"></div>
-                                <div class="col-sm-6">
-                                    <button class="place-order-btn">DELIVER HERE</button>
-                                </div>
-                                <div class="col-sm-3"></div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-sm-6 cart-item-info">   
                                     <h3>Add New Address
                                         <a href="{% url 'add_address' %}">HERE</a>
@@ -112,7 +104,7 @@
                             <table>
                                 <tr>
                                     <td>Price ({{ cart|length }} items)</td>
-                                    <td>₹{{ cart.get_discounted_price }}</td>
+                                    <td>₹{{ cart.get_discounted_price|floatformat:2|intcomma }}</td>
                                 </tr>
                                 <tr>
                                     <td>Delivery Charges</td>
@@ -127,12 +119,17 @@
                                 </tr>
                                 <tr class="total-amount">
                                     <td>Total Amount</td>
-                                    <td>₹{{ cart.get_final_price }}</td>
+                                    <td>₹{{ cart.get_final_price_after_coupon|floatformat:2|intcomma }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="savings">You will save ₹{{ cart.get_total_savings }} on this order</td>
                                 </tr>
                             </table>
+                        </div>
+                        
+
+                        <div class="row btn-pad">
+                            <button class="place-order-btn" type="submit" form="addressForm">DELIVER HERE</button>
                         </div>
 
 
